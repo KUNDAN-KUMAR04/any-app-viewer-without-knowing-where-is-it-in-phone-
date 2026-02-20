@@ -1,1123 +1,1004 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APK BYPASS - Open Android Apps Directly</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #00ff88;
-            --secondary: #ff4400;
-            --accent: #00ccff;
-            --warn: #ffcc00;
-            --bg: #0a0a0a;
-            --bg2: #111111;
-            --bg3: #181818;
-            --border: #2a2a2a;
-            --text: #e8e8e8;
-            --text2: #888;
-            --card: #141414;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-            pointer-events: none;
-            z-index: 9999;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APK Bypass — Open Any Android App Directly</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff88; --r:#ff3e3e; --b:#00ccff; --y:#ffcc00;
+  --bg:#080808; --bg2:#111; --bg3:#181818; --card:#141414;
+  --border:#222; --text:#e0e0e0; --dim:#666;
+  --radius:2px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;overflow-x:hidden;min-height:100vh}
 
-        /* HEADER */
-        header {
-            background: #0d0d0d;
-            border-bottom: 1px solid var(--primary);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 0 20px rgba(0,255,136,0.15);
-        }
-        .header-top {
-            background: var(--primary);
-            padding: 4px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header-top span {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            color: #000;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .header-main {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        .logo {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(0,255,136,0.4);
-        }
-        .logo span { color: var(--secondary); }
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .device-badge {
-            background: rgba(0,255,136,0.1);
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 5px 12px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 1px;
-        }
-        .btn-defaults {
-            background: rgba(255,204,0,0.1);
-            border: 1px solid var(--warn);
-            color: var(--warn);
-            padding: 5px 14px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .btn-defaults:hover { background: rgba(255,204,0,0.2); }
+/* scanline */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9999}
 
-        /* HERO */
-        .hero {
-            background: linear-gradient(180deg, #0d0d0d 0%, var(--bg) 100%);
-            padding: 40px 20px 32px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: 50%;
-            transform: translateX(-50%);
-            width: 600px; height: 600px;
-            background: radial-gradient(circle, rgba(0,255,136,0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-label {
-            display: inline-block;
-            background: var(--secondary);
-            color: #fff;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 11px;
-            padding: 4px 12px;
-            letter-spacing: 2px;
-            margin-bottom: 14px;
-        }
-        .hero h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: clamp(1.6rem, 5vw, 2.6rem);
-            font-weight: 900;
-            color: var(--text);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            line-height: 1.1;
-        }
-        .hero h1 em { color: var(--primary); font-style: normal; text-shadow: 0 0 30px rgba(0,255,136,0.4); }
-        .hero p {
-            color: var(--text2);
-            max-width: 540px;
-            margin: 0 auto 26px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            line-height: 1.9;
-        }
-        .stats-bar { display: flex; justify-content: center; gap: 36px; flex-wrap: wrap; }
-        .stat-num { font-family: 'Orbitron', monospace; font-size: 1.8rem; font-weight: 700; color: var(--primary); display: block; }
-        .stat-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+/* ─── HEADER ─── */
+header{background:#0c0c0c;border-bottom:1px solid var(--g);position:sticky;top:0;z-index:200;box-shadow:0 0 24px rgba(0,255,136,.12)}
+.h-strip{background:var(--g);padding:3px 20px;display:flex;justify-content:space-between;align-items:center}
+.h-strip span{font-family:'Share Tech Mono',monospace;font-size:10px;color:#000;font-weight:700;letter-spacing:1px}
+.h-main{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;max-width:1400px;margin:0 auto;gap:12px;flex-wrap:wrap}
+.logo{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--g);text-decoration:none;letter-spacing:2px;text-shadow:0 0 20px rgba(0,255,136,.3)}
+.logo b{color:var(--r)}
+.h-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 12px;border:1px solid;letter-spacing:1px;cursor:default}
+.badge-g{color:var(--g);border-color:var(--g);background:rgba(0,255,136,.07)}
+.badge-y{color:var(--y);border-color:var(--y);background:rgba(255,204,0,.07);cursor:pointer;transition:.15s}
+.badge-y:hover{background:rgba(255,204,0,.15)}
+.badge-b{color:var(--b);border-color:var(--b);background:rgba(0,204,255,.07);cursor:pointer;transition:.15s}
+.badge-b:hover{background:rgba(0,204,255,.15)}
 
-        /* CONTROLS */
-        .controls {
-            background: var(--bg2);
-            border-bottom: 1px solid var(--border);
-            padding: 14px 20px;
-            position: sticky;
-            top: 73px;
-            z-index: 90;
-        }
-        .controls-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .search-wrap { flex: 1; min-width: 200px; position: relative; }
-        .search-wrap::before {
-            content: '⌕';
-            position: absolute;
-            left: 11px; top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 18px;
-            pointer-events: none;
-        }
-        input[type="text"] {
-            width: 100%;
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 13px;
-            padding: 10px 14px 10px 34px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus { border-color: var(--primary); }
-        input[type="text"]::placeholder { color: var(--text2); }
-        select {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            padding: 10px 14px;
-            outline: none;
-            cursor: pointer;
-        }
+/* ─── PAGE SYSTEM ─── */
+.page{display:none}
+.page.active{display:block}
 
-        /* DEVICE TABS */
-        .device-tabs {
-            padding: 14px 20px 0;
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .dtab {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text2);
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-            font-size: 13px;
-            padding: 7px 14px;
-            cursor: pointer;
-            transition: all 0.15s;
-            text-transform: uppercase;
-        }
-        .dtab:hover, .dtab.active { border-color: var(--primary); color: var(--primary); background: rgba(0,255,136,0.05); }
+/* ─── HOME/DEVICE DETECT ─── */
+.detect-hero{padding:60px 20px 40px;text-align:center;background:linear-gradient(180deg,#0c0c0c,var(--bg));border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.detect-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(0,255,136,.06),transparent 70%);pointer-events:none}
+.det-chip{display:inline-block;background:var(--r);color:#fff;font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 12px;letter-spacing:2px;margin-bottom:14px}
+.detect-hero h1{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5vw,3rem);font-weight:900;letter-spacing:2px;margin-bottom:10px;line-height:1.1}
+.detect-hero h1 em{color:var(--g);font-style:normal;text-shadow:0 0 30px rgba(0,255,136,.4)}
+.detect-hero p{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim);line-height:2;margin-bottom:30px;max-width:500px;margin-left:auto;margin-right:auto}
 
-        /* MAIN */
-        .main { max-width: 1400px; margin: 0 auto; padding: 24px 20px 60px; }
+/* device detected card */
+.detected-card{display:inline-flex;flex-direction:column;align-items:center;gap:10px;background:var(--bg2);border:2px solid var(--g);padding:24px 40px;margin-bottom:30px;box-shadow:0 0 40px rgba(0,255,136,.1);animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 30px rgba(0,255,136,.1)}50%{box-shadow:0 0 50px rgba(0,255,136,.2)}}
+.det-logo{font-size:3rem;line-height:1}
+.det-name{font-family:'Orbitron',monospace;font-size:1.2rem;font-weight:900;color:var(--g);letter-spacing:2px}
+.det-os{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px}
+.btn-go{display:inline-block;background:var(--g);color:#000;font-family:'Orbitron',monospace;font-weight:700;font-size:0.9rem;padding:12px 32px;cursor:pointer;letter-spacing:2px;border:none;transition:.2s;text-transform:uppercase}
+.btn-go:hover{background:#00cc6a;transform:translateY(-1px)}
 
-        /* =============================================
-           QUICK LAUNCH CATEGORIES — USER'S DEFAULT APPS
-           ============================================= */
-        .quick-section {
-            margin-bottom: 40px;
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--warn);
-        }
-        .quick-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-        }
-        .quick-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--warn);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .quick-hint {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 10px;
-            color: var(--text2);
-            letter-spacing: 1px;
-        }
-        .quick-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1px;
-            background: var(--border);
-        }
-        .quick-card {
-            background: var(--card);
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            position: relative;
-        }
-        .quick-cat-label {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 9px;
-            color: var(--text2);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        /* The main open link in quick card */
-        .quick-card a.quick-open {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: var(--text);
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: color 0.15s;
-            min-height: 32px;
-        }
-        .quick-card a.quick-open:hover { color: var(--primary); }
-        .quick-card a.quick-open .q-ico { font-size: 1.2rem; flex-shrink: 0; }
-        .quick-card a.quick-open .q-name { flex: 1; line-height: 1.2; }
-        .quick-card a.quick-open .q-arr { color: var(--primary); font-size: 0.8rem; opacity: 0; transition: opacity 0.15s; }
-        .quick-card a.quick-open:hover .q-arr { opacity: 1; }
-        .quick-card .change-btn {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text2);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 9px;
-            padding: 3px 8px;
-            cursor: pointer;
-            letter-spacing: 1px;
-            text-align: left;
-            transition: all 0.15s;
-            width: fit-content;
-        }
-        .quick-card .change-btn:hover { border-color: var(--warn); color: var(--warn); }
-        .not-set {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 10px;
-            color: var(--text2);
-            font-style: italic;
-        }
+/* brand grid on home */
+.brand-grid-wrap{max-width:1200px;margin:0 auto;padding:30px 20px}
+.section-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:3px;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:18px}
+.brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.brand-tile{background:var(--card);border:1px solid var(--border);padding:20px 14px;text-align:center;cursor:pointer;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:8px}
+.brand-tile:hover{border-color:var(--g);background:rgba(0,255,136,.04);transform:translateY(-2px)}
+.brand-tile .bt-ico{font-size:2rem}
+.brand-tile .bt-name{font-family:'Orbitron',monospace;font-size:.7rem;font-weight:700;color:var(--text);letter-spacing:1px;text-transform:uppercase}
+.brand-tile .bt-os{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim)}
+.brand-tile .bt-count{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--g)}
 
-        /* BRAND SECTION */
-        .brand-section { margin-bottom: 36px; animation: fadeUp 0.35s ease both; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-        .brand-heading {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 0;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-        }
-        .brand-heading::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 50px; height: 2px; background: var(--primary); }
-        .brand-emoji { font-size: 1.5rem; }
-        .brand-name { font-family: 'Orbitron', monospace; font-size: 0.95rem; font-weight: 700; color: var(--text); letter-spacing: 1px; text-transform: uppercase; }
-        .brand-count { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); background: var(--bg3); padding: 2px 7px; border: 1px solid var(--border); margin-left: auto; }
+/* ─── DEVICE PAGE ─── */
+.dev-page{max-width:1400px;margin:0 auto;padding:0 20px 60px}
 
-        /* APP LIST */
-        .app-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
-        .app-list li { background: var(--card); border: 1px solid var(--border); transition: all 0.15s; }
-        .app-list li:hover { border-color: rgba(0,255,136,0.35); background: #1a1a1a; }
-        .app-list li.is-default { border-color: rgba(255,204,0,0.3); }
-        .app-list li.is-default:hover { border-color: rgba(255,204,0,0.6); }
+/* device hero band */
+.dev-hero{padding:24px 20px;background:var(--bg2);border-bottom:3px solid var(--g);margin-bottom:0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.dev-hero-ico{font-size:2.5rem}
+.dev-hero-info{flex:1}
+.dev-hero-name{font-family:'Orbitron',monospace;font-size:1.2rem;font-weight:900;color:var(--g);letter-spacing:2px;text-transform:uppercase}
+.dev-hero-os{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--dim);margin-top:3px;letter-spacing:1px}
+.dev-hero-stats{display:flex;gap:20px;flex-wrap:wrap}
+.dev-stat{text-align:center}
+.dev-stat-n{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:700;color:var(--g);display:block}
+.dev-stat-l{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
 
-        /* MAIN LINK — intent://pkg/#Intent;scheme=android-app;end */
-        .app-list li a.app-link {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 11px 14px;
-            text-decoration: none;
-            color: var(--text);
-            transition: color 0.15s;
-        }
-        .app-list li a.app-link:hover { color: var(--primary); }
-        .lbl-open { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; min-width: 32px; flex-shrink: 0; }
-        .app-ico { font-size: 1.25rem; width: 26px; text-align: center; flex-shrink: 0; }
-        .app-nm { font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 1.05rem; flex: 1; }
-        .app-pkg { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--text2); display: none; }
-        @media (min-width: 600px) { .app-pkg { display: block; } }
-        .app-cat { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--accent); background: rgba(0,204,255,0.07); border: 1px solid rgba(0,204,255,0.2); padding: 2px 6px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
-        .default-badge { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--warn); background: rgba(255,204,0,0.1); border: 1px solid rgba(255,204,0,0.3); padding: 2px 6px; letter-spacing: 0.5px; flex-shrink: 0; }
-        .btn-set-default {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text2);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 9px;
-            padding: 3px 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-            flex-shrink: 0;
-            letter-spacing: 0.5px;
-        }
-        .btn-set-default:hover { border-color: var(--warn); color: var(--warn); }
-        .btn-set-default.is-set { border-color: rgba(255,204,0,0.4); color: var(--warn); }
-        .btn-copy { background: none; border: 1px solid var(--border); color: var(--text2); font-size: 11px; padding: 2px 7px; cursor: pointer; transition: all 0.15s; flex-shrink: 0; font-family: 'Share Tech Mono', monospace; }
-        .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
-        .arr { color: var(--primary); font-size: 0.9rem; opacity: 0; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
-        .app-list li a.app-link:hover .arr { opacity: 1; transform: translateX(3px); }
+/* quick launch bar (defaults) */
+.quick-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0}
+.quick-bar-title{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--y);letter-spacing:2px;padding:10px 20px 6px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.quick-chips{display:flex;gap:6px;padding:10px 20px;flex-wrap:wrap;overflow-x:auto}
+.qchip{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:.15s;text-decoration:none;color:var(--text);white-space:nowrap;min-width:0;font-size:0}
+.qchip:hover,.qchip.set{border-color:var(--y)}
+.qchip.set{background:rgba(255,204,0,.06)}
+.qchip .qc-ico{font-size:1.1rem}
+.qchip .qc-info{display:flex;flex-direction:column;gap:1px}
+.qchip .qc-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
+.qchip .qc-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;color:var(--text)}
+.qchip.set .qc-name{color:var(--y)}
+.qchip-add{border-style:dashed;color:var(--dim)}
+.qchip-add:hover{border-color:var(--g);color:var(--g)}
 
-        /* SELECT DEFAULT MODAL */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal {
-            background: var(--bg2);
-            border: 1px solid var(--warn);
-            width: 100%;
-            max-width: 520px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 0 40px rgba(255,204,0,0.15);
-            animation: modalIn 0.2s ease;
-        }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(255,204,0,0.05);
-        }
-        .modal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--warn);
-            letter-spacing: 1px;
-        }
-        .modal-subtitle {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 10px;
-            color: var(--text2);
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
-        .modal-close {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text2);
-            font-size: 16px;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-            font-family: 'Share Tech Mono', monospace;
-        }
-        .modal-close:hover { border-color: var(--secondary); color: var(--secondary); }
-        .modal-search {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-        .modal-search input {
-            width: 100%;
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            padding: 8px 12px;
-            outline: none;
-        }
-        .modal-search input:focus { border-color: var(--warn); }
-        .modal-list { overflow-y: auto; flex: 1; }
-        .modal-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            transition: background 0.1s;
-        }
-        .modal-item:hover { background: rgba(255,204,0,0.05); }
-        .modal-item.selected { background: rgba(255,204,0,0.08); border-left: 3px solid var(--warn); }
-        .modal-item-ico { font-size: 1.2rem; flex-shrink: 0; }
-        .modal-item-info { flex: 1; }
-        .modal-item-name { font-family: 'Rajdhani', sans-serif; font-weight: 600; font-size: 1rem; color: var(--text); }
-        .modal-item-pkg { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--text2); }
-        .modal-item-brand { font-family: 'Share Tech Mono', monospace; font-size: 9px; color: var(--accent); }
-        .modal-item-check { color: var(--warn); font-size: 1.1rem; }
-        .modal-none { padding: 30px; text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--text2); }
+/* filter bar */
+.filter-bar{padding:12px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--border);margin-bottom:20px;position:sticky;top:73px;background:var(--bg);z-index:80;padding-top:16px;padding-bottom:12px}
+.s-wrap{flex:1;min-width:180px;position:relative}
+.s-wrap::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--g);font-size:17px;pointer-events:none}
+input.search{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:9px 12px 9px 32px;outline:none;transition:.2s}
+input.search:focus{border-color:var(--g)}
+input.search::placeholder{color:var(--dim)}
+.cat-btns{display:flex;gap:5px;flex-wrap:wrap}
+.cat-btn{font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 12px;border:1px solid var(--border);background:var(--card);color:var(--dim);cursor:pointer;transition:.15s;letter-spacing:.5px;text-transform:uppercase}
+.cat-btn:hover,.cat-btn.on{border-color:var(--g);color:var(--g);background:rgba(0,255,136,.05)}
 
-        /* EMPTY STATE */
-        .empty-state { text-align: center; padding: 60px 20px; color: var(--text2); }
-        .empty-state .ico { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
-        .empty-state p { font-family: 'Share Tech Mono', monospace; font-size: 12px; }
+/* ─── APP GROUPS ─── */
+.app-group{margin-bottom:32px;animation:fadeUp .3s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.ag-head{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:10px;position:relative}
+.ag-head::after{content:'';position:absolute;bottom:-1px;left:0;width:40px;height:2px;background:var(--g)}
+.ag-priority{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;letter-spacing:1px;text-transform:uppercase;border:1px solid}
+.ag-priority.native{color:var(--g);border-color:var(--g);background:rgba(0,255,136,.08)}
+.ag-priority.popular{color:var(--b);border-color:var(--b);background:rgba(0,204,255,.08)}
+.ag-priority.third{color:var(--dim);border-color:var(--border)}
+.ag-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1rem;color:var(--text);letter-spacing:.5px;text-transform:uppercase;flex:1}
+.ag-count{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);border:1px solid var(--border);padding:2px 7px}
 
-        /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 24px; right: 20px;
-            color: #000;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 9px 18px;
-            z-index: 9000;
-            animation: toastIn 0.25s ease;
-            letter-spacing: 1px;
-        }
-        .toast.green { background: var(--primary); }
-        .toast.yellow { background: var(--warn); }
-        @keyframes toastIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+/* ─── APP ROW ─── */
+.app-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+.app-li{background:var(--card);border:1px solid var(--border);transition:.12s}
+.app-li:hover{border-color:rgba(0,255,136,.3);background:#1a1a1a}
+.app-li.is-default{border-color:rgba(255,204,0,.35)}
+.app-li.is-default:hover{border-color:rgba(255,204,0,.6)}
 
-        /* FOOTER */
-        footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 18px 20px; text-align: center; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text2); letter-spacing: 1px; }
-        footer span { color: var(--primary); }
-    </style>
+/* THE INTENT LINK — entertechpro.com exact method */
+a.app-link{display:flex;align-items:center;gap:10px;padding:10px 14px;text-decoration:none;color:var(--text);transition:.12s}
+a.app-link:hover{color:var(--g)}
+.al-open{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);min-width:28px;letter-spacing:1px;flex-shrink:0}
+.al-ico{font-size:1.2rem;width:24px;text-align:center;flex-shrink:0}
+.al-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;flex:1;min-width:0}
+.al-pkg{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);display:none;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(min-width:580px){.al-pkg{display:block}}
+.al-cat{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--b);background:rgba(0,204,255,.07);border:1px solid rgba(0,204,255,.2);padding:2px 6px;flex-shrink:0;letter-spacing:.5px;text-transform:uppercase}
+.al-def-badge{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--y);background:rgba(255,204,0,.1);border:1px solid rgba(255,204,0,.3);padding:2px 5px;flex-shrink:0}
+.btn-setdef{background:none;border:1px solid var(--border);color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 7px;cursor:pointer;transition:.15s;flex-shrink:0;letter-spacing:.5px}
+.btn-setdef:hover{border-color:var(--y);color:var(--y)}
+.btn-setdef.on{border-color:rgba(255,204,0,.4);color:var(--y)}
+.btn-cp{background:none;border:1px solid var(--border);color:var(--dim);font-size:10px;padding:3px 7px;cursor:pointer;transition:.15s;flex-shrink:0}
+.btn-cp:hover{border-color:var(--b);color:var(--b)}
+.al-arr{color:var(--g);font-size:.8rem;opacity:0;transition:.15s;flex-shrink:0}
+a.app-link:hover .al-arr{opacity:1;transform:translateX(3px)}
+
+/* ─── MODAL ─── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:500;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--y);width:100%;max-width:520px;max-height:82vh;display:flex;flex-direction:column;box-shadow:0 0 50px rgba(255,204,0,.12);animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;scale:.97}to{opacity:1;scale:1}}
+.modal-hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px;border-bottom:1px solid var(--border);background:rgba(255,204,0,.04);gap:10px}
+.modal-ttl{font-family:'Orbitron',monospace;font-size:.8rem;font-weight:700;color:var(--y);letter-spacing:1px}
+.modal-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);margin-top:3px;line-height:1.5}
+.modal-x{background:none;border:1px solid var(--border);color:var(--dim);width:28px;height:28px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s}
+.modal-x:hover{border-color:var(--r);color:var(--r)}
+.modal-srch{padding:10px 16px;border-bottom:1px solid var(--border)}
+.modal-srch input{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:12px;padding:8px 12px;outline:none}
+.modal-srch input:focus{border-color:var(--y)}
+.modal-list{overflow-y:auto;flex:1}
+.m-item{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:.1s}
+.m-item:hover{background:rgba(255,204,0,.04)}
+.m-item.sel{background:rgba(255,204,0,.07);border-left:2px solid var(--y)}
+.m-ico{font-size:1.2rem;flex-shrink:0}
+.m-info{flex:1;min-width:0}
+.m-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:1rem;color:var(--text)}
+.m-pkg{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m-brand{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--b)}
+.m-check{color:var(--y);font-size:1rem}
+.m-empty{padding:30px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--dim)}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;right:20px;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;padding:9px 18px;z-index:9000;animation:tin .25s ease;letter-spacing:1px}
+@keyframes tin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.toast.g{background:var(--g);color:#000}
+.toast.y{background:var(--y);color:#000}
+
+/* ─── EMPTY STATE ─── */
+.empty{padding:50px 20px;text-align:center;color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:12px}
+.empty-ico{font-size:2.5rem;opacity:.25;margin-bottom:10px}
+
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:16px 20px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:1px}
+footer em{color:var(--g);font-style:normal}
+</style>
 </head>
 <body>
 
 <header>
-    <div class="header-top">
-        <span>▶ ANDROID APP DIRECT LAUNCH — CLICK TO OPEN ON DEVICE</span>
-        <span id="deviceLabel">📱 DETECTING...</span>
+  <div class="h-strip">
+    <span>▶ APK BYPASS — DIRECT ANDROID APP LAUNCH</span>
+    <span id="hStrip">📱 DETECTING DEVICE...</span>
+  </div>
+  <div class="h-main">
+    <a href="#" class="logo" onclick="showHome();return false">APK<b>.</b>BYPASS</a>
+    <div class="h-actions">
+      <button class="badge badge-y" onclick="openDefaultsModal()">⚙ SET DEFAULTS</button>
+      <button class="badge badge-b" onclick="showAllBrands()">≡ ALL BRANDS</button>
+      <div class="badge badge-g" id="hBadge">DETECTING</div>
     </div>
-    <div class="header-main">
-        <a href="#" class="logo">APK<span>.</span>BYPASS</a>
-        <div class="header-actions">
-            <button class="btn-defaults" onclick="openDefaultsModal()">⚙ SET DEFAULT APPS</button>
-            <div class="device-badge" id="deviceBadge">ALL DEVICES</div>
-        </div>
-    </div>
+  </div>
 </header>
 
-<section class="hero">
-    <div class="hero-label">▶ YOUR DEFAULTS — YOUR APPS — DIRECT OPEN</div>
-    <h1>OPEN <em>YOUR</em><br>DEFAULT APPS</h1>
-    <p>// set which phone, browser, files app you use<br>// then tap to open YOUR installed app directly</p>
-    <div class="stats-bar">
-        <div class="stat"><span class="stat-num" id="totalApps">0</span><span class="stat-label">Total Apps</span></div>
-        <div class="stat"><span class="stat-num" id="totalBrands">0</span><span class="stat-label">Brands</span></div>
-        <div class="stat"><span class="stat-num" id="defaultsSet">0</span><span class="stat-label">Defaults Set</span></div>
-    </div>
-</section>
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: HOME / DEVICE DETECT
+════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <div class="detect-hero">
+    <div class="det-chip">▶ DEVICE AUTO-DETECTED</div>
+    <h1>YOUR DEVICE.<br><em>YOUR APPS.</em></h1>
+    <p>// we detected your phone brand<br>// tap below to see apps made for YOUR device<br>// click any link → app opens instantly on android</p>
 
-<div class="controls">
-    <div class="controls-inner">
-        <div class="search-wrap">
-            <input type="text" id="searchInput" placeholder="Search app name or package...">
-        </div>
-        <select id="categoryFilter">
-            <option value="">All Categories</option>
-            <option value="phone">Phone / Dialer</option>
-            <option value="browser">Browser</option>
-            <option value="files">Files / Manager</option>
-            <option value="messages">Messages / SMS</option>
-            <option value="camera">Camera</option>
-            <option value="gallery">Gallery</option>
-            <option value="launcher">Launcher</option>
-            <option value="store">App Store</option>
-            <option value="google">Google Apps</option>
-            <option value="security">Security</option>
-            <option value="utility">Utility</option>
-            <option value="social">Social</option>
-            <option value="health">Health</option>
-            <option value="gaming">Gaming</option>
-            <option value="system">System</option>
-        </select>
+    <div class="detected-card" id="detectedCard">
+      <div class="det-logo" id="detLogo">📱</div>
+      <div class="det-name" id="detName">DETECTING...</div>
+      <div class="det-os" id="detOS">Reading user agent...</div>
     </div>
+    <br>
+    <button class="btn-go" id="btnGo" onclick="goToDetected()">OPEN MY DEVICE PAGE →</button>
+  </div>
+
+  <div class="brand-grid-wrap">
+    <div class="section-label">// or select your brand manually</div>
+    <div class="brand-grid" id="brandGrid"></div>
+  </div>
 </div>
 
-<div class="device-tabs" id="deviceTabs"></div>
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE: DEVICE-SPECIFIC
+════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-device">
+  <div class="dev-hero" id="devHero"></div>
 
-<main class="main">
-    <!-- Quick Launch — User's Defaults -->
-    <div id="quickSection"></div>
-    <!-- All Apps -->
-    <div id="appSections"></div>
-</main>
-
-<!-- SET DEFAULT MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
-    <div class="modal">
-        <div class="modal-header">
-            <div>
-                <div class="modal-title" id="modalTitle">SELECT DEFAULT APP</div>
-                <div class="modal-subtitle" id="modalSubtitle">Choose your preferred app for this category</div>
-            </div>
-            <button class="modal-close" onclick="closeModal()">✕</button>
-        </div>
-        <div class="modal-search">
-            <input type="text" id="modalSearch" placeholder="Search apps..." oninput="renderModalList()">
-        </div>
-        <div class="modal-list" id="modalList"></div>
+  <div class="quick-bar">
+    <div class="quick-bar-title">
+      <span>⚡ QUICK LAUNCH — YOUR DEFAULT APPS</span>
+      <span id="defaultsCount" style="color:var(--dim);font-size:10px">0/8 SET</span>
     </div>
+    <div class="quick-chips" id="quickChips"></div>
+  </div>
+
+  <div class="dev-page">
+    <div class="filter-bar">
+      <div class="s-wrap"><input class="search" id="devSearch" placeholder="Search apps or packages..." oninput="renderDevApps()"></div>
+      <div class="cat-btns" id="catBtns"></div>
+    </div>
+    <div id="devAppSections"></div>
+  </div>
 </div>
 
-<footer>
-    <span>APK.BYPASS</span> // YOUR DEFAULT APP LAUNCHER // SET ONCE — OPEN ANYTIME
-</footer>
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" id="modalTtl">SELECT DEFAULT</div>
+        <div class="modal-sub" id="modalSub"></div>
+      </div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-srch"><input type="text" id="modalSrch" placeholder="Search apps..." oninput="renderModalItems()"></div>
+    <div class="modal-list" id="modalItems"></div>
+  </div>
+</div>
+
+<footer><em>APK.BYPASS</em> // intent://pkg/#Intent;scheme=android-app;end // DIRECT ANDROID LAUNCH</footer>
 
 <script>
-// ============================================================
-// APP DATABASE — All apps with proper categories
-// ============================================================
-const DB = {
-    samsung: {
-        name:"Samsung", emoji:"🏢",
-        apps:[
-            {name:"Galaxy Store",          pkg:"com.sec.android.app.samsungapps",           icon:"🛍",  cat:"store",    dev:["samsung"]},
-            {name:"Samsung My Files",       pkg:"com.sec.android.app.myfiles",               icon:"📁",  cat:"files",    dev:["samsung"]},
-            {name:"Samsung Internet",       pkg:"com.sec.android.app.sbrowser",              icon:"🌐",  cat:"browser",  dev:["samsung"]},
-            {name:"Samsung Health",         pkg:"com.sec.android.app.shealth",               icon:"❤️", cat:"health",   dev:["samsung"]},
-            {name:"Samsung Members",        pkg:"com.samsung.memberservice",                  icon:"👥",  cat:"system",   dev:["samsung"]},
-            {name:"Samsung Pay",            pkg:"com.samsung.android.spay",                  icon:"💳",  cat:"security", dev:["samsung"]},
-            {name:"Samsung Pass",           pkg:"com.samsung.android.samsungpass",           icon:"🔐",  cat:"security", dev:["samsung"]},
-            {name:"SmartThings",            pkg:"com.samsung.android.beaconmanager",         icon:"📡",  cat:"utility",  dev:["samsung"]},
-            {name:"Bixby Voice",            pkg:"com.svoice.service",                        icon:"🎤",  cat:"system",   dev:["samsung"]},
-            {name:"Samsung Kids",           pkg:"com.sec.android.app.kidshome",              icon:"👶",  cat:"system",   dev:["samsung"]},
-            {name:"Samsung Notes",          pkg:"com.samsung.android.app.notes",             icon:"📝",  cat:"utility",  dev:["samsung"]},
-            {name:"Samsung Secure Folder",  pkg:"com.samsung.knox.securefolder",             icon:"🔒",  cat:"security", dev:["samsung"]},
-            {name:"Samsung Smart Switch",   pkg:"com.sec.android.easyMover",                icon:"↔️",  cat:"utility",  dev:["samsung"]},
-            {name:"Samsung Dialer",         pkg:"com.samsung.android.dialer",               icon:"☎️",  cat:"phone",    dev:["samsung"]},
-            {name:"Samsung Messages",       pkg:"com.samsung.android.messaging",             icon:"💬",  cat:"messages", dev:["samsung"]},
-            {name:"Samsung Camera",         pkg:"com.sec.android.app.camera",               icon:"📷",  cat:"camera",   dev:["samsung"]},
-            {name:"Samsung Gallery",        pkg:"com.sec.android.gallery3d",                icon:"🖼️", cat:"gallery",  dev:["samsung"]},
-            {name:"Samsung Home Launcher",  pkg:"com.sec.android.app.launcher",             icon:"🏠",  cat:"launcher", dev:["samsung"]},
-            {name:"Alliance Shield",        pkg:"com.rrivenllc.shieldx",                    icon:"🛡️",  cat:"security", dev:["samsung"]},
-            {name:"Samsung Secure Folder",  pkg:"com.samsung.knox.securefolder",            icon:"🔒",  cat:"security", dev:["samsung"]},
-        ]
-    },
-    google: {
-        name:"Google", emoji:"🔵",
-        apps:[
-            {name:"Gmail",                  pkg:"com.google.android.gm",                               icon:"📧",  cat:"google",   dev:["all"]},
-            {name:"Google Maps",            pkg:"com.google.android.apps.maps",                       icon:"🗺️", cat:"google",   dev:["all"]},
-            {name:"Google Drive",           pkg:"com.google.android.apps.docs",                       icon:"☁️",  cat:"google",   dev:["all"]},
-            {name:"YouTube",                pkg:"com.google.android.youtube",                         icon:"▶️",  cat:"google",   dev:["all"]},
-            {name:"Google Photos",          pkg:"com.google.android.apps.photos",                     icon:"📷",  cat:"gallery",  dev:["all"]},
-            {name:"Google Keep",            pkg:"com.google.android.keep",                            icon:"📌",  cat:"utility",  dev:["all"]},
-            {name:"Google Calendar",        pkg:"com.google.android.calendar",                        icon:"📅",  cat:"utility",  dev:["all"]},
-            {name:"Google Meet",            pkg:"com.google.android.apps.meetings",                   icon:"🤝",  cat:"google",   dev:["all"]},
-            {name:"Google Translate",       pkg:"com.google.android.apps.translate",                  icon:"🌍",  cat:"utility",  dev:["all"]},
-            {name:"Google Authenticator",   pkg:"com.google.android.apps.authenticator2",             icon:"🔐",  cat:"security", dev:["all"]},
-            {name:"Google News",            pkg:"com.google.android.apps.news",                       icon:"📰",  cat:"utility",  dev:["all"]},
-            {name:"Google Play Games",      pkg:"com.google.android.play.games",                      icon:"🎮",  cat:"gaming",   dev:["all"]},
-            {name:"Google Assistant",       pkg:"com.google.android.apps.googleassistant",            icon:"🤖",  cat:"google",   dev:["all"]},
-            {name:"Quick Search Box",       pkg:"com.google.android.googlequicksearchbox",            icon:"🔍",  cat:"google",   dev:["all"]},
-            {name:"Login Google Account",   pkg:"com.google.android.gsf.login.LoginActivity",        icon:"👤",  cat:"google",   dev:["all"]},
-            {name:"Chrome Browser",         pkg:"com.android.chrome",                                 icon:"🌐",  cat:"browser",  dev:["all"]},
-            {name:"Google Messages",        pkg:"com.google.android.apps.messaging",                  icon:"💬",  cat:"messages", dev:["all"]},
-            {name:"Google Phone",           pkg:"com.google.android.dialer",                          icon:"📞",  cat:"phone",    dev:["all"]},
-            {name:"Google Files",           pkg:"com.google.android.apps.nbu.files",                  icon:"📁",  cat:"files",    dev:["all"]},
-            {name:"Google Camera",          pkg:"com.google.android.GoogleCamera",                    icon:"📸",  cat:"camera",   dev:["all"]},
-        ]
-    },
-    android: {
-        name:"Android System", emoji:"🤖",
-        apps:[
-            {name:"Settings",               pkg:"com.android.settings",                 icon:"⚙️",  cat:"system",   dev:["all"]},
-            {name:"Files",                  pkg:"com.android.documentsui",               icon:"📁",  cat:"files",    dev:["all"]},
-            {name:"Calculator",             pkg:"com.android.calculator2",               icon:"🔢",  cat:"utility",  dev:["all"]},
-            {name:"Clock",                  pkg:"com.android.deskclock",                 icon:"🕐",  cat:"utility",  dev:["all"]},
-            {name:"Phone (AOSP)",           pkg:"com.android.phone",                     icon:"📞",  cat:"phone",    dev:["all"]},
-            {name:"Messages (AOSP)",        pkg:"com.android.messaging",                 icon:"💬",  cat:"messages", dev:["all"]},
-            {name:"Contacts",               pkg:"com.android.contacts",                  icon:"👥",  cat:"system",   dev:["all"]},
-            {name:"Set Screen Lock",        pkg:"com.google.android.gms",               icon:"🔒",  cat:"security", dev:["all"], scheme:"promote_smartlock_scheme"},
-            {name:"Accessibility",          pkg:"com.google.android.accessibility.switchaccess", icon:"♿", cat:"system", dev:["all"]},
-            {name:"ADB Settings",           pkg:"com.sec.android.app.modemui.activities.usb.settings", icon:"🔌", cat:"system", dev:["all"]},
-        ]
-    },
-    // POPULAR THIRD-PARTY APPS — works on any device
-    popular: {
-        name:"Popular Apps", emoji:"⭐",
-        apps:[
-            // Phone / Dialer alternatives
-            {name:"Truecaller",             pkg:"com.truecaller",                        icon:"📞",  cat:"phone",    dev:["all"]},
-            {name:"Drupe Dialer",           pkg:"com.batutech.drupe",                    icon:"📞",  cat:"phone",    dev:["all"]},
-            {name:"Phone by Google",        pkg:"com.google.android.dialer",             icon:"📞",  cat:"phone",    dev:["all"]},
-            {name:"Duo (Video Call)",       pkg:"com.google.android.apps.tachyon",       icon:"📹",  cat:"phone",    dev:["all"]},
-            // Browser alternatives
-            {name:"Firefox Browser",        pkg:"org.mozilla.firefox",                   icon:"🦊",  cat:"browser",  dev:["all"]},
-            {name:"Opera Browser",          pkg:"com.opera.browser",                     icon:"🔴",  cat:"browser",  dev:["all"]},
-            {name:"Brave Browser",          pkg:"com.brave.browser",                     icon:"🦁",  cat:"browser",  dev:["all"]},
-            {name:"UC Browser",             pkg:"com.UCMobile.intl",                     icon:"🔵",  cat:"browser",  dev:["all"]},
-            {name:"DuckDuckGo Browser",     pkg:"com.duckduckgo.mobile.android",         icon:"🦆",  cat:"browser",  dev:["all"]},
-            {name:"Kiwi Browser",           pkg:"com.kiwibrowser.browser",               icon:"🥝",  cat:"browser",  dev:["all"]},
-            // SMS / Messages alternatives
-            {name:"WhatsApp",               pkg:"com.whatsapp",                          icon:"💚",  cat:"messages", dev:["all"]},
-            {name:"Telegram",               pkg:"org.telegram.messenger",                icon:"✈️",  cat:"messages", dev:["all"]},
-            {name:"Signal",                 pkg:"org.thoughtcrime.securesms",            icon:"🔵",  cat:"messages", dev:["all"]},
-            {name:"Pulse SMS",              pkg:"xyz.klinker.messenger",                 icon:"💬",  cat:"messages", dev:["all"]},
-            {name:"QKSMS",                  pkg:"com.moez.QKSMS",                        icon:"💬",  cat:"messages", dev:["all"]},
-            {name:"Chomp SMS",              pkg:"com.chompsms",                          icon:"💬",  cat:"messages", dev:["all"]},
-            // File Managers
-            {name:"ES File Explorer",       pkg:"com.estrongs.android.pop",              icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"Solid Explorer",         pkg:"pl.solidexplorer2",                     icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"MiXplorer",              pkg:"com.mixplorer",                         icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"FX File Explorer",       pkg:"nextapp.fx",                            icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"CX File Explorer",       pkg:"com.cxinventor.file.explorer",          icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"File Commander",         pkg:"com.mobisystems.fileman",               icon:"📂",  cat:"files",    dev:["all"]},
-            {name:"Astro File Manager",     pkg:"com.metago.astro",                      icon:"📂",  cat:"files",    dev:["all"]},
-            // Gallery alternatives
-            {name:"Simple Gallery",         pkg:"com.simplemobiletools.gallery.pro",     icon:"🖼️", cat:"gallery",  dev:["all"]},
-            {name:"QuickPic Gallery",       pkg:"com.alensw.PicFolder",                  icon:"🖼️", cat:"gallery",  dev:["all"]},
-            // Launchers
-            {name:"Nova Launcher",          pkg:"com.teslacoilsw.launcher",              icon:"🚀",  cat:"launcher", dev:["all"]},
-            {name:"Apex Launcher",          pkg:"com.anddoes.launcher",                  icon:"🔺",  cat:"launcher", dev:["all"]},
-            {name:"Microsoft Launcher",     pkg:"com.microsoft.launcher",                icon:"🪟",  cat:"launcher", dev:["all"]},
-            {name:"Niagara Launcher",       pkg:"bitpit.launcher",                       icon:"⚡",  cat:"launcher", dev:["all"]},
-            {name:"Poco Launcher",          pkg:"com.mi.android.launcher",               icon:"⚡",  cat:"launcher", dev:["all"]},
-            {name:"One UI Home",            pkg:"com.sec.android.app.launcher",          icon:"🏠",  cat:"launcher", dev:["all"]},
-            // Camera alternatives
-            {name:"Open Camera",            pkg:"net.sourceforge.opencamera",            icon:"📷",  cat:"camera",   dev:["all"]},
-            {name:"Camera FV-5",            pkg:"com.flavionet.android.camera.pro",      icon:"📷",  cat:"camera",   dev:["all"]},
-            // Social
-            {name:"Instagram",              pkg:"com.instagram.android",                 icon:"📸",  cat:"social",   dev:["all"]},
-            {name:"Facebook",               pkg:"com.facebook.katana",                   icon:"👍",  cat:"social",   dev:["all"]},
-            {name:"Twitter / X",            pkg:"com.twitter.android",                   icon:"🐦",  cat:"social",   dev:["all"]},
-            {name:"TikTok",                 pkg:"com.zhiliaoapp.musically",              icon:"🎵",  cat:"social",   dev:["all"]},
-            {name:"Snapchat",               pkg:"com.snapchat.android",                  icon:"👻",  cat:"social",   dev:["all"]},
-        ]
-    },
-    oneplus: {
-        name:"OnePlus", emoji:"⚙️",
-        apps:[
-            {name:"OnePlus Camera",         pkg:"com.oneplus.camera",        icon:"📷",  cat:"camera",   dev:["oneplus"]},
-            {name:"OnePlus Gallery",        pkg:"com.oneplus.gallery",       icon:"🖼️", cat:"gallery",  dev:["oneplus"]},
-            {name:"OnePlus File Manager",   pkg:"com.oneplus.filemanager",   icon:"📂",  cat:"files",    dev:["oneplus"]},
-            {name:"Clone Phone",            pkg:"com.oneplus.backuprestore", icon:"📱",  cat:"utility",  dev:["oneplus"]},
-            {name:"OnePlus Notes",          pkg:"com.oneplus.notes",         icon:"📝",  cat:"utility",  dev:["oneplus"]},
-            {name:"OnePlus Community",      pkg:"com.oneplus.community",     icon:"👥",  cat:"social",   dev:["oneplus"]},
-            {name:"OnePlus Health",         pkg:"com.oneplus.health",        icon:"❤️", cat:"health",   dev:["oneplus"]},
-            {name:"OnePlus Launcher",       pkg:"com.oneplus.launcher",      icon:"⌂",   cat:"launcher", dev:["oneplus"]},
-            {name:"OnePlus Phone",          pkg:"com.oneplus.telephony",     icon:"📞",  cat:"phone",    dev:["oneplus"]},
-            {name:"OnePlus Messages",       pkg:"com.oneplus.messaging",     icon:"💬",  cat:"messages", dev:["oneplus"]},
-        ]
-    },
-    xiaomi: {
-        name:"Xiaomi", emoji:"🔴",
-        apps:[
-            {name:"Mi File Manager",        pkg:"com.mi.android.globalFileexplorer",  icon:"📂",  cat:"files",    dev:["xiaomi"]},
-            {name:"Xiaomi App Store",       pkg:"com.xiaomi.mipicks",                 icon:"🛍",  cat:"store",    dev:["xiaomi"]},
-            {name:"MIUI Gallery",           pkg:"com.miui.gallery",                   icon:"🖼️", cat:"gallery",  dev:["xiaomi"]},
-            {name:"MIUI Launcher",          pkg:"com.miui.launcher",                  icon:"⌂",   cat:"launcher", dev:["xiaomi"]},
-            {name:"Xiaomi ShareMe",         pkg:"com.xiaomi.midrop",                  icon:"⚡",  cat:"utility",  dev:["xiaomi"]},
-            {name:"Mi Home",                pkg:"com.xiaomi.smarthome",               icon:"🏠",  cat:"utility",  dev:["xiaomi"]},
-            {name:"Mi Mover",               pkg:"com.xiaomi.mover",                   icon:"↔️",  cat:"utility",  dev:["xiaomi"]},
-            {name:"MIUI Camera",            pkg:"com.android.camera",                 icon:"📷",  cat:"camera",   dev:["xiaomi"]},
-            {name:"MIUI Phone",             pkg:"com.android.incallui",               icon:"📞",  cat:"phone",    dev:["xiaomi"]},
-            {name:"MIUI Messages",          pkg:"com.android.mms",                    icon:"💬",  cat:"messages", dev:["xiaomi"]},
-        ]
-    },
-    oppo: {
-        name:"OPPO", emoji:"🟢",
-        apps:[
-            {name:"OPPO App Store",         pkg:"com.heytap.app",            icon:"🛍",  cat:"store",    dev:["oppo"]},
-            {name:"OPPO Camera",            pkg:"com.coloros.camera",         icon:"📷",  cat:"camera",   dev:["oppo"]},
-            {name:"OPPO Gallery",           pkg:"com.coloros.gallery",        icon:"🖼️", cat:"gallery",  dev:["oppo"]},
-            {name:"OPPO File Manager",      pkg:"com.oplus.filemanager",      icon:"📂",  cat:"files",    dev:["oppo"]},
-            {name:"OPPO Launcher",          pkg:"com.coloros.launcher",       icon:"⌂",   cat:"launcher", dev:["oppo"]},
-            {name:"Phone Clone",            pkg:"com.coloros.backuprestore",  icon:"📱",  cat:"utility",  dev:["oppo"]},
-            {name:"OPPO Phone",             pkg:"com.coloros.dialer",         icon:"📞",  cat:"phone",    dev:["oppo"]},
-            {name:"OPPO Messages",          pkg:"com.coloros.mms",            icon:"💬",  cat:"messages", dev:["oppo"]},
-        ]
-    },
-    vivo: {
-        name:"Vivo", emoji:"💙",
-        apps:[
-            {name:"Vivo App Store",         pkg:"com.vivo.appstore",   icon:"🛍",  cat:"store",    dev:["vivo"]},
-            {name:"Vivo Camera",            pkg:"com.vivo.camera",     icon:"📷",  cat:"camera",   dev:["vivo"]},
-            {name:"Vivo Gallery",           pkg:"com.vivo.gallery",    icon:"🖼️", cat:"gallery",  dev:["vivo"]},
-            {name:"Vivo File Manager",      pkg:"com.vivo.filemanager",icon:"📂",  cat:"files",    dev:["vivo"]},
-            {name:"Vivo Launcher",          pkg:"com.vivo.launcher",   icon:"⌂",   cat:"launcher", dev:["vivo"]},
-            {name:"Vivo EasyShare",         pkg:"com.vivo.easyshare",  icon:"⚡",  cat:"utility",  dev:["vivo"]},
-            {name:"Vivo Phone",             pkg:"com.vivo.dialer",     icon:"📞",  cat:"phone",    dev:["vivo"]},
-            {name:"Vivo Messages",          pkg:"com.vivo.mms",        icon:"💬",  cat:"messages", dev:["vivo"]},
-        ]
-    },
-    motorola: {
-        name:"Motorola", emoji:"Ⓜ️",
-        apps:[
-            {name:"Motorola Moto",          pkg:"com.motorola.moto",                icon:"📱",  cat:"system",   dev:["motorola"]},
-            {name:"Moto Secure",            pkg:"com.motorola.securityhub",          icon:"🔒",  cat:"security", dev:["motorola"]},
-            {name:"Motorola Launcher",      pkg:"com.motorola.launcher3",            icon:"⌂",   cat:"launcher", dev:["motorola"]},
-            {name:"Motorola Camera",        pkg:"com.motorola.camera",               icon:"📷",  cat:"camera",   dev:["motorola"]},
-            {name:"Motorola Dialer",        pkg:"com.motorola.dialer",               icon:"📞",  cat:"phone",    dev:["motorola"]},
-            {name:"Motorola Messages",      pkg:"com.motorola.messaging",            icon:"💬",  cat:"messages", dev:["motorola"]},
-        ]
-    },
-    asus: {
-        name:"ASUS", emoji:"⬆️",
-        apps:[
-            {name:"ASUS Phone Clone",       pkg:"com.futuredial.asusdatatransfer",  icon:"📱",  cat:"utility",  dev:["asus"]},
-            {name:"ASUS Camera",            pkg:"com.asus.camera",                  icon:"📷",  cat:"camera",   dev:["asus"]},
-            {name:"ASUS Gallery",           pkg:"com.asus.gallery",                 icon:"🖼️", cat:"gallery",  dev:["asus"]},
-            {name:"ASUS File Manager",      pkg:"com.asus.filemanager",             icon:"📂",  cat:"files",    dev:["asus"]},
-            {name:"ASUS Launcher",          pkg:"com.asus.launcher",                icon:"⌂",   cat:"launcher", dev:["asus"]},
-            {name:"ASUS Phone",             pkg:"com.asus.contacts",                icon:"📞",  cat:"phone",    dev:["asus"]},
-        ]
-    }
+'use strict';
+
+// ════════════════════════════════════════════════════════
+// MASTER DATABASE
+// Structure: each brand has { meta, native[], popular[], third[] }
+// native = brand's own system apps (highest priority)
+// popular = popular 3rd party that work on this device
+// third = other useful apps
+// ════════════════════════════════════════════════════════
+const BRANDS = {
+
+samsung: {
+  name:'Samsung', emoji:'🏢', os:'One UI / Android',
+  detect: ua => /SM-[A-Z]|Samsung/i.test(ua),
+  color:'#1428a0',
+  native: [
+    {name:'Phone (Dialer)',        pkg:'com.samsung.android.dialer',                icon:'📞', cat:'phone'},
+    {name:'Messages',              pkg:'com.samsung.android.messaging',             icon:'💬', cat:'messages'},
+    {name:'My Files',              pkg:'com.sec.android.app.myfiles',               icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.sec.android.app.camera',                icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.sec.android.gallery3d',                 icon:'🖼️',cat:'gallery'},
+    {name:'Home Launcher',         pkg:'com.sec.android.app.launcher',              icon:'🏠', cat:'launcher'},
+    {name:'Galaxy Store',          pkg:'com.sec.android.app.samsungapps',           icon:'🛍', cat:'store'},
+    {name:'Samsung Internet',      pkg:'com.sec.android.app.sbrowser',              icon:'🌐', cat:'browser'},
+    {name:'Samsung Contacts',      pkg:'com.samsung.android.app.contacts',          icon:'👥', cat:'system'},
+    {name:'Samsung Calendar',      pkg:'com.samsung.android.calendar',              icon:'📅', cat:'system'},
+    {name:'Samsung Notes',         pkg:'com.samsung.android.app.notes',             icon:'📝', cat:'utility'},
+    {name:'Samsung Health',        pkg:'com.sec.android.app.shealth',               icon:'❤️',cat:'health'},
+    {name:'Samsung Pay',           pkg:'com.samsung.android.spay',                  icon:'💳', cat:'security'},
+    {name:'Samsung Pass',          pkg:'com.samsung.android.samsungpass',           icon:'🔐', cat:'security'},
+    {name:'Samsung Members',       pkg:'com.samsung.android.voc',                   icon:'👤', cat:'system'},
+    {name:'Secure Folder',         pkg:'com.samsung.knox.securefolder',             icon:'🔒', cat:'security'},
+    {name:'SmartThings',           pkg:'com.samsung.android.beaconmanager',         icon:'📡', cat:'utility'},
+    {name:'Bixby',                 pkg:'com.samsung.android.bixby.agent',           icon:'🤖', cat:'system'},
+    {name:'Smart Switch',          pkg:'com.sec.android.easyMover',                 icon:'↔️', cat:'utility'},
+    {name:'Samsung Clock',         pkg:'com.sec.android.app.clockpackage',          icon:'🕐', cat:'utility'},
+    {name:'Samsung Calculator',    pkg:'com.sec.android.app.popupcalculator',       icon:'🔢', cat:'utility'},
+    {name:'Samsung Music',         pkg:'com.sec.android.app.music',                 icon:'🎵', cat:'utility'},
+    {name:'Samsung Video',         pkg:'com.samsung.android.video',                 icon:'▶️', cat:'utility'},
+    {name:'Samsung Kids',          pkg:'com.samsung.android.kidsinstaller',         icon:'👶', cat:'system'},
+    {name:'AR Zone',               pkg:'com.samsung.android.arzone',                icon:'🥽', cat:'system'},
+    {name:'Nearby Share',          pkg:'com.samsung.android.nearby',                icon:'📶', cat:'utility'},
+    {name:'Link to Windows',       pkg:'com.microsoft.appmanager',                  icon:'🪟', cat:'utility'},
+    {name:'Samsung DeX',           pkg:'com.sec.android.desktopmode.uiservice',     icon:'🖥️', cat:'system'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Google Messages',       pkg:'com.google.android.apps.messaging',         icon:'💬', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Firefox',               pkg:'org.mozilla.firefox',                       icon:'🦊', cat:'browser'},
+    {name:'Google Files',          pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+  ]
+},
+
+xiaomi: {
+  name:'Xiaomi / MIUI / HyperOS', emoji:'🔴', os:'HyperOS / MIUI',
+  detect: ua => /xiaomi|MI |Redmi|POCO|HyperOS/i.test(ua),
+  color:'#ff6900',
+  native: [
+    {name:'Phone (MIUI Dialer)',   pkg:'com.android.incallui',                      icon:'📞', cat:'phone'},
+    {name:'Phone (Google Dialer)', pkg:'com.google.android.dialer',                 icon:'📞', cat:'phone', note:'Global ROM'},
+    {name:'Messages (MIUI)',       pkg:'com.android.mms',                           icon:'💬', cat:'messages'},
+    {name:'Mi File Manager',       pkg:'com.mi.android.globalFileexplorer',         icon:'📁', cat:'files'},
+    {name:'Mi File Manager (CN)',  pkg:'com.android.fileexplorer',                  icon:'📁', cat:'files'},
+    {name:'MIUI Camera',           pkg:'com.android.camera',                        icon:'📷', cat:'camera'},
+    {name:'MIUI Gallery',          pkg:'com.miui.gallery',                          icon:'🖼️',cat:'gallery'},
+    {name:'MIUI Launcher',         pkg:'com.miui.launcher',                         icon:'🏠', cat:'launcher'},
+    {name:'GetApps (Mi Store)',    pkg:'com.xiaomi.mipicks',                        icon:'🛍', cat:'store'},
+    {name:'MIUI Browser',          pkg:'com.mi.globalbrowser',                      icon:'🌐', cat:'browser'},
+    {name:'Mi Music',              pkg:'com.miui.player',                           icon:'🎵', cat:'utility'},
+    {name:'Mi Video',              pkg:'com.miui.video',                            icon:'▶️', cat:'utility'},
+    {name:'MIUI Notes',            pkg:'com.miui.notes',                            icon:'📝', cat:'utility'},
+    {name:'MIUI Clock',            pkg:'com.android.deskclock',                     icon:'🕐', cat:'utility'},
+    {name:'MIUI Calculator',       pkg:'com.miui.calculator',                       icon:'🔢', cat:'utility'},
+    {name:'Mi Health',             pkg:'com.mi.health',                             icon:'❤️',cat:'health'},
+    {name:'Mi Home (IoT)',         pkg:'com.xiaomi.smarthome',                      icon:'🏠', cat:'utility'},
+    {name:'MIUI Security',         pkg:'com.miui.securitycenter',                   icon:'🛡️',cat:'security'},
+    {name:'MIUI Settings',         pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Mi ShareMe',            pkg:'com.xiaomi.midrop',                         icon:'⚡', cat:'utility'},
+    {name:'MIUI Contacts',         pkg:'com.android.contacts',                      icon:'👥', cat:'system'},
+    {name:'MIUI Screen Recorder',  pkg:'com.miui.screenrecorder',                   icon:'📹', cat:'utility'},
+    {name:'Cleaner (MIUI)',        pkg:'com.miui.cleanmaster',                      icon:'🧹', cat:'utility'},
+    {name:'Mi Mover',              pkg:'com.xiaomi.mover',                          icon:'↔️', cat:'utility'},
+    {name:'Themes (MIUI)',         pkg:'com.android.thememanager',                  icon:'🎨', cat:'utility'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Solid Explorer',        pkg:'pl.solidexplorer2',                         icon:'📂', cat:'files'},
+  ]
+},
+
+oppo: {
+  name:'OPPO', emoji:'🟢', os:'ColorOS',
+  detect: ua => /OPPO|CPH\d|PH[AM]\d/i.test(ua),
+  color:'#2cc76b',
+  native: [
+    {name:'Phone (ColorOS Dialer)',pkg:'com.coloros.dialer',                        icon:'📞', cat:'phone'},
+    {name:'Messages',              pkg:'com.coloros.mms',                           icon:'💬', cat:'messages'},
+    {name:'My Files',              pkg:'com.coloros.filemanager',                   icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.coloros.camera',                        icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.coloros.gallery',                       icon:'🖼️',cat:'gallery'},
+    {name:'Launcher',              pkg:'com.coloros.launcher',                      icon:'🏠', cat:'launcher'},
+    {name:'OPPO App Market',       pkg:'com.heytap.market',                         icon:'🛍', cat:'store'},
+    {name:'Browser (ColorOS)',     pkg:'com.nearme.browser',                        icon:'🌐', cat:'browser'},
+    {name:'Notes',                 pkg:'com.coloros.note',                          icon:'📝', cat:'utility'},
+    {name:'Clock',                 pkg:'com.coloros.alarmclock',                    icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.coloros.calculator',                    icon:'🔢', cat:'utility'},
+    {name:'Music (OPPO)',          pkg:'com.heytap.music',                          icon:'🎵', cat:'utility'},
+    {name:'Video Player',          pkg:'com.coloros.video',                         icon:'▶️', cat:'utility'},
+    {name:'OPPO Themes',           pkg:'com.heytap.themestore',                     icon:'🎨', cat:'utility'},
+    {name:'Phone Manager',         pkg:'com.coloros.phonemanager',                  icon:'🛡️',cat:'security'},
+    {name:'Clone Phone',           pkg:'com.coloros.backuprestore',                 icon:'↔️', cat:'utility'},
+    {name:'OPPO Contacts',         pkg:'com.coloros.contacts',                      icon:'👥', cat:'system'},
+    {name:'Share',                 pkg:'com.heytap.nearbyshare',                    icon:'⚡', cat:'utility'},
+    {name:'Health',                pkg:'com.heytap.health',                         icon:'❤️',cat:'health'},
+    {name:'Weather',               pkg:'com.coloros.weather2',                      icon:'🌤', cat:'utility'},
+    {name:'Screen Recorder',       pkg:'com.coloros.screenrecorder',                icon:'📹', cat:'utility'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+    {name:'Google Files',          pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+  ]
+},
+
+vivo: {
+  name:'Vivo / iQOO', emoji:'💙', os:'Funtouch OS / OriginOS',
+  detect: ua => /vivo|iQOO|V\d{4}[A-Z]/i.test(ua),
+  color:'#1e90ff',
+  native: [
+    {name:'Phone (Vivo Dialer)',   pkg:'com.vivo.dialer',                           icon:'📞', cat:'phone'},
+    {name:'Messages (Vivo)',       pkg:'com.vivo.mms',                              icon:'💬', cat:'messages'},
+    {name:'File Manager',          pkg:'com.vivo.filemanager',                      icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.vivo.camera',                           icon:'📷', cat:'camera'},
+    {name:'Albums (Gallery)',       pkg:'com.vivo.gallery',                          icon:'🖼️',cat:'gallery'},
+    {name:'Jovi Home (Launcher)',  pkg:'com.bbk.launcher2',                         icon:'🏠', cat:'launcher'},
+    {name:'V-AppStore',            pkg:'com.vivo.appstore',                         icon:'🛍', cat:'store'},
+    {name:'Vivo Browser',          pkg:'com.vivo.browser',                          icon:'🌐', cat:'browser'},
+    {name:'iManager',              pkg:'com.vivo.abe',                              icon:'🛡️',cat:'security'},
+    {name:'i Music',               pkg:'com.vivo.music',                            icon:'🎵', cat:'utility'},
+    {name:'Video (Vivo)',          pkg:'com.vivo.videoplayer',                      icon:'▶️', cat:'utility'},
+    {name:'Notes',                 pkg:'com.vivo.notes',                            icon:'📝', cat:'utility'},
+    {name:'Clock',                 pkg:'com.vivo.alarmclock',                       icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.vivo.calculator',                       icon:'🔢', cat:'utility'},
+    {name:'Themes',                pkg:'com.vivo.themes',                           icon:'🎨', cat:'utility'},
+    {name:'Easy Share',            pkg:'com.vivo.easyshare',                        icon:'⚡', cat:'utility'},
+    {name:'Clone Phone',           pkg:'com.vivo.clonephone',                       icon:'↔️', cat:'utility'},
+    {name:'Health',                pkg:'com.vivo.health',                           icon:'❤️',cat:'health'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Contacts',              pkg:'com.android.contacts',                      icon:'👥', cat:'system'},
+    {name:'Screen Recorder',       pkg:'com.vivo.screenrecorder',                   icon:'📹', cat:'utility'},
+    {name:'Weather',               pkg:'com.vivo.weather',                          icon:'🌤', cat:'utility'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+    {name:'Google Files',          pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+  ]
+},
+
+realme: {
+  name:'Realme', emoji:'⚡', os:'Realme UI / ColorOS',
+  detect: ua => /Realme|RMX\d/i.test(ua),
+  color:'#FFD700',
+  native: [
+    {name:'Phone (Dialer)',        pkg:'com.coloros.dialer',                        icon:'📞', cat:'phone'},
+    {name:'Messages',              pkg:'com.coloros.mms',                           icon:'💬', cat:'messages'},
+    {name:'File Manager',          pkg:'com.coloros.filemanager',                   icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.coloros.camera',                        icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.coloros.gallery',                       icon:'🖼️',cat:'gallery'},
+    {name:'Launcher',              pkg:'com.coloros.launcher',                      icon:'🏠', cat:'launcher'},
+    {name:'Realme Community',      pkg:'com.realme.community',                      icon:'👥', cat:'system'},
+    {name:'App Market',            pkg:'com.heytap.market',                         icon:'🛍', cat:'store'},
+    {name:'Browser',               pkg:'com.nearme.browser',                        icon:'🌐', cat:'browser'},
+    {name:'Realme Share',          pkg:'com.heytap.nearbyshare',                    icon:'⚡', cat:'utility'},
+    {name:'Themes',                pkg:'com.heytap.themestore',                     icon:'🎨', cat:'utility'},
+    {name:'Notes',                 pkg:'com.coloros.note',                          icon:'📝', cat:'utility'},
+    {name:'Music',                 pkg:'com.heytap.music',                          icon:'🎵', cat:'utility'},
+    {name:'Phone Manager',         pkg:'com.coloros.phonemanager',                  icon:'🛡️',cat:'security'},
+    {name:'Health',                pkg:'com.heytap.health',                         icon:'❤️',cat:'health'},
+    {name:'Clone Phone',           pkg:'com.coloros.backuprestore',                 icon:'↔️', cat:'utility'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Screen Recorder',       pkg:'com.coloros.screenrecorder',                icon:'📹', cat:'utility'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+  ]
+},
+
+oneplus: {
+  name:'OnePlus', emoji:'⚙️', os:'OxygenOS / ColorOS',
+  detect: ua => /OnePlus|ONEPLUS|OP[A-Z]\d/i.test(ua),
+  color:'#f50514',
+  native: [
+    {name:'Phone (Google Dialer)', pkg:'com.google.android.dialer',                 icon:'📞', cat:'phone', note:'Default on most'},
+    {name:'Phone (OnePlus)',       pkg:'com.oneplus.dialer',                        icon:'📞', cat:'phone'},
+    {name:'Messages (Google)',     pkg:'com.google.android.apps.messaging',         icon:'💬', cat:'messages'},
+    {name:'Messages (OnePlus)',    pkg:'com.oneplus.messaging',                     icon:'💬', cat:'messages'},
+    {name:'File Manager',          pkg:'com.oneplus.filemanager',                   icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.oneplus.camera',                        icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.oneplus.gallery',                       icon:'🖼️',cat:'gallery'},
+    {name:'Launcher',              pkg:'net.oneplus.launcher',                      icon:'🏠', cat:'launcher'},
+    {name:'OnePlus Store',         pkg:'com.oneplus.store',                         icon:'🛍', cat:'store'},
+    {name:'Notes',                 pkg:'com.oneplus.notes',                         icon:'📝', cat:'utility'},
+    {name:'Clock',                 pkg:'com.oneplus.clock',                         icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.oneplus.calculator',                    icon:'🔢', cat:'utility'},
+    {name:'Weather',               pkg:'com.oneplus.weather',                       icon:'🌤', cat:'utility'},
+    {name:'OnePlus Health',        pkg:'com.oneplus.health',                        icon:'❤️',cat:'health'},
+    {name:'OnePlus Share',         pkg:'com.oneplus.sharetransfer',                 icon:'⚡', cat:'utility'},
+    {name:'Clone Phone',           pkg:'com.oneplus.backuprestore',                 icon:'↔️', cat:'utility'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'HiddenSpace',           pkg:'com.oneplus.privatespace',                  icon:'🔒', cat:'security'},
+    {name:'OnePlus Community',     pkg:'com.oneplus.community',                     icon:'👥', cat:'system'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+    {name:'Solid Explorer',        pkg:'pl.solidexplorer2',                         icon:'📂', cat:'files'},
+  ]
+},
+
+motorola: {
+  name:'Motorola', emoji:'Ⓜ️', os:'Near-Stock Android',
+  detect: ua => /Motorola|MOTO[A-Z]|XT\d{4}/i.test(ua),
+  color:'#cc0000',
+  native: [
+    {name:'Phone (Moto Dialer)',   pkg:'com.motorola.dialer',                       icon:'📞', cat:'phone'},
+    {name:'Messages (Moto)',       pkg:'com.motorola.messaging',                    icon:'💬', cat:'messages'},
+    {name:'Files (Moto)',          pkg:'com.motorola.filemanager',                  icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.motorola.camera',                       icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.motorola.gallery3d',                    icon:'🖼️',cat:'gallery'},
+    {name:'Moto Launcher',         pkg:'com.motorola.launcher3',                    icon:'🏠', cat:'launcher'},
+    {name:'Moto App',              pkg:'com.motorola.moto',                         icon:'⚙️', cat:'system'},
+    {name:'Moto Secure',           pkg:'com.motorola.securityhub',                  icon:'🔒', cat:'security'},
+    {name:'Moto Gestures',         pkg:'com.motorola.actions',                      icon:'👆', cat:'system'},
+    {name:'Moto Display',          pkg:'com.motorola.targetnotif',                  icon:'💡', cat:'system'},
+    {name:'Clock',                 pkg:'com.android.deskclock',                     icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.android.calculator2',                   icon:'🔢', cat:'utility'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Contacts',              pkg:'com.android.contacts',                      icon:'👥', cat:'system'},
+  ],
+  popular: [
+    {name:'Google Phone',          pkg:'com.google.android.dialer',                 icon:'📞', cat:'phone'},
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Google Messages',       pkg:'com.google.android.apps.messaging',         icon:'💬', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Google Files',          pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+    {name:'Google Photos',         pkg:'com.google.android.apps.photos',            icon:'📷', cat:'gallery'},
+  ]
+},
+
+nokia: {
+  name:'Nokia', emoji:'🔵', os:'Android One / Stock',
+  detect: ua => /Nokia|HMD/i.test(ua),
+  color:'#005AFF',
+  native: [
+    {name:'Phone (Google Dialer)', pkg:'com.google.android.dialer',                 icon:'📞', cat:'phone'},
+    {name:'Messages (Google)',     pkg:'com.google.android.apps.messaging',         icon:'💬', cat:'messages'},
+    {name:'Files (Google)',        pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+    {name:'Camera',                pkg:'com.android.camera2',                       icon:'📷', cat:'camera'},
+    {name:'Gallery (Google)',      pkg:'com.google.android.apps.photos',            icon:'🖼️',cat:'gallery'},
+    {name:'Launcher',              pkg:'com.android.launcher3',                     icon:'🏠', cat:'launcher'},
+    {name:'Clock',                 pkg:'com.android.deskclock',                     icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.android.calculator2',                   icon:'🔢', cat:'utility'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Contacts',              pkg:'com.android.contacts',                      icon:'👥', cat:'system'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+  ]
+},
+
+asus: {
+  name:'ASUS / ROG', emoji:'⬆️', os:'ZenUI / ROG UI',
+  detect: ua => /ASUS|ZenFone|ROG Phone/i.test(ua),
+  color:'#0066ff',
+  native: [
+    {name:'Phone (ASUS Dialer)',   pkg:'com.asus.contacts',                         icon:'📞', cat:'phone'},
+    {name:'Messages',              pkg:'com.asus.message',                           icon:'💬', cat:'messages'},
+    {name:'File Manager',          pkg:'com.asus.filemanager',                      icon:'📁', cat:'files'},
+    {name:'Camera (ZenFone)',      pkg:'com.asus.camera',                           icon:'📷', cat:'camera'},
+    {name:'Gallery',               pkg:'com.asus.gallery',                          icon:'🖼️',cat:'gallery'},
+    {name:'Launcher (ZenUI)',      pkg:'com.asus.launcher',                         icon:'🏠', cat:'launcher'},
+    {name:'ASUS Data Transfer',    pkg:'com.futuredial.asusdatatransfer',            icon:'↔️', cat:'utility'},
+    {name:'Mobile Manager',        pkg:'com.asus.mobilemanager',                    icon:'🛡️',cat:'security'},
+    {name:'ROG Armory Crate',      pkg:'com.asus.armoury.master',                   icon:'🎮', cat:'system'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+    {name:'Contacts',              pkg:'com.android.contacts',                      icon:'👥', cat:'system'},
+    {name:'Clock',                 pkg:'com.android.deskclock',                     icon:'🕐', cat:'utility'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+  ]
+},
+
+google_pixel: {
+  name:'Google Pixel', emoji:'🔵', os:'Pixel Android',
+  detect: ua => /Pixel|Nexus/i.test(ua),
+  color:'#4285f4',
+  native: [
+    {name:'Phone (Google)',        pkg:'com.google.android.dialer',                 icon:'📞', cat:'phone'},
+    {name:'Messages (Google)',     pkg:'com.google.android.apps.messaging',         icon:'💬', cat:'messages'},
+    {name:'Files (Google)',        pkg:'com.google.android.apps.nbu.files',         icon:'📁', cat:'files'},
+    {name:'Camera (GCam)',         pkg:'com.google.android.GoogleCamera',           icon:'📷', cat:'camera'},
+    {name:'Photos',                pkg:'com.google.android.apps.photos',            icon:'🖼️',cat:'gallery'},
+    {name:'Pixel Launcher',        pkg:'com.google.android.apps.nexuslauncher',     icon:'🏠', cat:'launcher'},
+    {name:'Play Store',            pkg:'com.android.vending',                       icon:'🛍', cat:'store'},
+    {name:'Chrome',                pkg:'com.android.chrome',                        icon:'🌐', cat:'browser'},
+    {name:'Clock',                 pkg:'com.google.android.deskclock',              icon:'🕐', cat:'utility'},
+    {name:'Calculator',            pkg:'com.google.android.calculator',             icon:'🔢', cat:'utility'},
+    {name:'Contacts',              pkg:'com.google.android.contacts',               icon:'👥', cat:'system'},
+    {name:'Recorder',              pkg:'com.google.android.apps.recorder',          icon:'🎙', cat:'utility'},
+    {name:'Gmail',                 pkg:'com.google.android.gm',                     icon:'📧', cat:'utility'},
+    {name:'Maps',                  pkg:'com.google.android.apps.maps',              icon:'🗺', cat:'utility'},
+    {name:'Assistant',             pkg:'com.google.android.googlequicksearchbox',   icon:'🤖', cat:'system'},
+    {name:'Settings',              pkg:'com.android.settings',                      icon:'⚙️', cat:'system'},
+  ],
+  popular: [
+    {name:'Truecaller',            pkg:'com.truecaller',                            icon:'📞', cat:'phone'},
+    {name:'WhatsApp',              pkg:'com.whatsapp',                              icon:'💚', cat:'messages'},
+    {name:'Telegram',              pkg:'org.telegram.messenger',                    icon:'✈️', cat:'messages'},
+    {name:'Nova Launcher',         pkg:'com.teslacoilsw.launcher',                  icon:'🚀', cat:'launcher'},
+    {name:'Solid Explorer',        pkg:'pl.solidexplorer2',                         icon:'📂', cat:'files'},
+  ]
+}
+
 };
 
-// All apps flat list
-const ALL_APPS = [];
-Object.entries(DB).forEach(([brand, b]) => {
-    b.apps.forEach(a => ALL_APPS.push({...a, brand, brandName: b.name, brandEmoji: b.emoji}));
-});
-
-// Default categories users can set
-const DEFAULT_CATS = [
-    { cat: 'phone',    label: 'Phone / Dialer', icon: '📞', hint: 'e.g. Truecaller, Samsung Dialer, Google Phone' },
-    { cat: 'messages', label: 'SMS / Messages',  icon: '💬', hint: 'e.g. WhatsApp, Google Messages, Samsung Messages' },
-    { cat: 'browser',  label: 'Browser',         icon: '🌐', hint: 'e.g. Chrome, Firefox, Samsung Internet' },
-    { cat: 'files',    label: 'File Manager',    icon: '📁', hint: 'e.g. Samsung My Files, ES Explorer, Solid Explorer' },
-    { cat: 'camera',   label: 'Camera',          icon: '📷', hint: 'e.g. Samsung Camera, MIUI Camera, Open Camera' },
-    { cat: 'gallery',  label: 'Gallery',         icon: '🖼️', hint: 'e.g. Samsung Gallery, Google Photos, Simple Gallery' },
-    { cat: 'launcher', label: 'Launcher',        icon: '🏠', hint: 'e.g. Nova Launcher, Samsung Home, MIUI Launcher' },
-    { cat: 'store',    label: 'App Store',       icon: '🛒', hint: 'e.g. Galaxy Store, Xiaomi Store, OPPO Store' },
+// Popular 3rd-party used across all brands (for the "popular apps" section)
+const UNIVERSAL_POPULAR = [
+  {name:'Truecaller',          pkg:'com.truecaller',                          icon:'📞', cat:'phone'},
+  {name:'Drupe Dialer',        pkg:'com.batutech.drupe',                      icon:'📞', cat:'phone'},
+  {name:'WhatsApp',            pkg:'com.whatsapp',                            icon:'💚', cat:'messages'},
+  {name:'WhatsApp Business',   pkg:'com.whatsapp.w4b',                       icon:'💚', cat:'messages'},
+  {name:'Telegram',            pkg:'org.telegram.messenger',                  icon:'✈️', cat:'messages'},
+  {name:'Signal',              pkg:'org.thoughtcrime.securesms',              icon:'🔵', cat:'messages'},
+  {name:'Google Messages',     pkg:'com.google.android.apps.messaging',       icon:'💬', cat:'messages'},
+  {name:'QKSMS',               pkg:'com.moez.QKSMS',                         icon:'💬', cat:'messages'},
+  {name:'Chrome',              pkg:'com.android.chrome',                      icon:'🌐', cat:'browser'},
+  {name:'Firefox',             pkg:'org.mozilla.firefox',                     icon:'🦊', cat:'browser'},
+  {name:'Brave',               pkg:'com.brave.browser',                       icon:'🦁', cat:'browser'},
+  {name:'Opera',               pkg:'com.opera.browser',                       icon:'🔴', cat:'browser'},
+  {name:'DuckDuckGo',          pkg:'com.duckduckgo.mobile.android',           icon:'🦆', cat:'browser'},
+  {name:'UC Browser',          pkg:'com.UCMobile.intl',                      icon:'🔵', cat:'browser'},
+  {name:'Google Files',        pkg:'com.google.android.apps.nbu.files',       icon:'📁', cat:'files'},
+  {name:'ES File Explorer',    pkg:'com.estrongs.android.pop',                icon:'📂', cat:'files'},
+  {name:'Solid Explorer',      pkg:'pl.solidexplorer2',                       icon:'📂', cat:'files'},
+  {name:'MiXplorer',           pkg:'com.mixplorer',                           icon:'📂', cat:'files'},
+  {name:'FX File Explorer',    pkg:'nextapp.fx',                              icon:'📂', cat:'files'},
+  {name:'CX File Explorer',    pkg:'com.cxinventor.file.explorer',            icon:'📂', cat:'files'},
+  {name:'Google Photos',       pkg:'com.google.android.apps.photos',          icon:'📷', cat:'gallery'},
+  {name:'Simple Gallery',      pkg:'com.simplemobiletools.gallery.pro',       icon:'🖼', cat:'gallery'},
+  {name:'Open Camera',         pkg:'net.sourceforge.opencamera',              icon:'📷', cat:'camera'},
+  {name:'Nova Launcher',       pkg:'com.teslacoilsw.launcher',                icon:'🚀', cat:'launcher'},
+  {name:'Microsoft Launcher',  pkg:'com.microsoft.launcher',                  icon:'🪟', cat:'launcher'},
+  {name:'Niagara Launcher',    pkg:'bitpit.launcher',                         icon:'⚡', cat:'launcher'},
+  {name:'Apex Launcher',       pkg:'com.anddoes.launcher',                    icon:'🔺', cat:'launcher'},
+  {name:'Instagram',           pkg:'com.instagram.android',                   icon:'📸', cat:'social'},
+  {name:'Facebook',            pkg:'com.facebook.katana',                     icon:'👍', cat:'social'},
+  {name:'Twitter / X',         pkg:'com.twitter.android',                     icon:'🐦', cat:'social'},
+  {name:'Snapchat',            pkg:'com.snapchat.android',                    icon:'👻', cat:'social'},
+  {name:'TikTok',              pkg:'com.zhiliaoapp.musically',                icon:'🎵', cat:'social'},
+  {name:'Gmail',               pkg:'com.google.android.gm',                   icon:'📧', cat:'utility'},
+  {name:'Google Maps',         pkg:'com.google.android.apps.maps',            icon:'🗺', cat:'utility'},
+  {name:'Google Drive',        pkg:'com.google.android.apps.docs',            icon:'☁️', cat:'utility'},
+  {name:'YouTube',             pkg:'com.google.android.youtube',              icon:'▶️', cat:'utility'},
+  {name:'Google Translate',    pkg:'com.google.android.apps.translate',       icon:'🌍', cat:'utility'},
+  {name:'Google Authenticator',pkg:'com.google.android.apps.authenticator2', icon:'🔐', cat:'security'},
+  {name:'Authy',               pkg:'com.authy.authy',                         icon:'🔐', cat:'security'},
 ];
 
-// ============================================================
-// STORAGE — user's default app choices (localStorage)
-// ============================================================
-const STORAGE_KEY = 'apkBypassDefaults';
+// Default categories
+const DEF_CATS = [
+  {cat:'phone',    label:'Phone',    icon:'📞'},
+  {cat:'messages', label:'Messages', icon:'💬'},
+  {cat:'browser',  label:'Browser',  icon:'🌐'},
+  {cat:'files',    label:'Files',    icon:'📁'},
+  {cat:'camera',   label:'Camera',   icon:'📷'},
+  {cat:'gallery',  label:'Gallery',  icon:'🖼️'},
+  {cat:'launcher', label:'Launcher', icon:'🏠'},
+  {cat:'store',    label:'Store',    icon:'🛍'},
+];
 
-function loadDefaults() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
-    catch { return {}; }
+// ════════════════ INTENT URL ════════════════
+const intentUrl = a => a.url || `intent://${a.pkg}/#Intent;scheme=${a.scheme||'android-app'};end`;
+
+// ════════════════ STORAGE ════════════════
+const SK = 'apkBypassDefs2';
+const loadDefs = () => { try{return JSON.parse(localStorage.getItem(SK)||'{}')}catch{return{}} };
+const saveDef  = (cat,pkg) => { const d=loadDefs(); d[cat]=pkg; localStorage.setItem(SK,JSON.stringify(d)) };
+const getDefApp= (cat,brandKey) => {
+  const d=loadDefs(); if(!d[cat])return null;
+  return allApps(brandKey).find(a=>a.pkg===d[cat])||null;
+};
+const toggleDef= (cat,pkg) => {
+  const d=loadDefs();
+  if(d[cat]===pkg){delete d[cat];localStorage.setItem(SK,JSON.stringify(d));return false;}
+  d[cat]=pkg; localStorage.setItem(SK,JSON.stringify(d)); return true;
+};
+
+// ════════════════ HELPERS ════════════════
+let currentBrand = null;
+let currentCatFilter = '';
+
+const allApps = (brandKey) => {
+  if(!brandKey||!BRANDS[brandKey]) return [];
+  const b = BRANDS[brandKey];
+  return [
+    ...(b.native||[]).map(a=>({...a,group:'native'})),
+    ...(b.popular||[]).map(a=>({...a,group:'popular'})),
+    ...UNIVERSAL_POPULAR.map(a=>({...a,group:'third'}))
+  ].filter((a,i,arr)=>arr.findIndex(x=>x.pkg===a.pkg)===i); // dedupe
+};
+
+// ════════════════ DEVICE DETECT ════════════════
+function detectBrand(){
+  const ua = navigator.userAgent;
+  for(const [key,b] of Object.entries(BRANDS)){
+    if(b.detect && b.detect(ua)) return key;
+  }
+  return null;
 }
 
-function saveDefault(cat, appPkg) {
-    const d = loadDefaults();
-    d[cat] = appPkg;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+// ════════════════ PAGE ROUTING ════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showHome(){ showPage('page-home'); }
+function showAllBrands(){ showPage('page-home'); }
+function goToDetected(){ if(currentBrand) loadDevicePage(currentBrand); }
+
+function loadDevicePage(brandKey){
+  currentBrand = brandKey;
+  currentCatFilter = '';
+  const b = BRANDS[brandKey];
+  if(!b) return;
+
+  // Header
+  document.getElementById('hBadge').textContent = b.name.split('/')[0].trim().toUpperCase();
+
+  // Dev hero
+  const apps = allApps(brandKey);
+  const cats = [...new Set(apps.map(a=>a.cat))];
+  document.getElementById('devHero').innerHTML = `
+    <div class="dev-hero-ico">${b.emoji}</div>
+    <div class="dev-hero-info">
+      <div class="dev-hero-name">${b.name}</div>
+      <div class="dev-hero-os">// ${b.os}</div>
+    </div>
+    <div class="dev-hero-stats">
+      <div class="dev-stat"><span class="dev-stat-n">${(b.native||[]).length}</span><span class="dev-stat-l">Native</span></div>
+      <div class="dev-stat"><span class="dev-stat-n">${apps.length}</span><span class="dev-stat-l">Total Apps</span></div>
+      <div class="dev-stat"><span class="dev-stat-n">${cats.length}</span><span class="dev-stat-l">Categories</span></div>
+    </div>
+    <button onclick="showHome()" style="background:none;border:1px solid var(--border);color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 12px;cursor:pointer;margin-left:auto;letter-spacing:1px" onmouseover="this.style.borderColor='var(--g)'" onmouseout="this.style.borderColor='var(--border)'">← BRANDS</button>`;
+
+  renderQuickChips(brandKey);
+  renderCatFilter(brandKey);
+  renderDevApps();
+  showPage('page-device');
+  window.scrollTo(0,0);
 }
 
-function getDefaultApp(cat) {
-    const d = loadDefaults();
-    if (!d[cat]) return null;
-    return ALL_APPS.find(a => a.pkg === d[cat]) || null;
+// ════════════════ QUICK CHIPS ════════════════
+function renderQuickChips(brandKey){
+  const defs = loadDefs();
+  const setCount = DEF_CATS.filter(dc=>defs[dc.cat]).length;
+  document.getElementById('defaultsCount').textContent = `${setCount}/${DEF_CATS.length} SET`;
+
+  const html = DEF_CATS.map(dc=>{
+    const app = getDefApp(dc.cat, brandKey);
+    if(app){
+      return `<a class="qchip set" href="${intentUrl(app)}" target="_blank" rel="noopener">
+        <span class="qc-ico">${app.icon}</span>
+        <span class="qc-info">
+          <span class="qc-label">${dc.icon} ${dc.label}</span>
+          <span class="qc-name">${app.name}</span>
+        </span>
+      </a>`;
+    } else {
+      return `<div class="qchip qchip-add" onclick="openCatModal('${dc.cat}','${dc.label}','${brandKey}')">
+        <span class="qc-ico">${dc.icon}</span>
+        <span class="qc-info">
+          <span class="qc-label">${dc.label}</span>
+          <span class="qc-name" style="color:var(--dim);font-size:11px">+ set default</span>
+        </span>
+      </div>`;
+    }
+  }).join('');
+  document.getElementById('quickChips').innerHTML = html;
 }
 
-// ============================================================
-// INTENT URL — exact entertechpro.com method
-// ============================================================
-function intentUrl(app) {
-    if (app.url) return app.url;
-    const scheme = app.scheme || 'android-app';
-    return `intent://${app.pkg}/#Intent;scheme=${scheme};end`;
+// ════════════════ CATEGORY FILTER ════════════════
+function renderCatFilter(brandKey){
+  const apps = allApps(brandKey);
+  const cats = [...new Set(apps.map(a=>a.cat))].sort();
+  const btns = ['all',...cats].map(c=>
+    `<button class="cat-btn${(currentCatFilter===''&&c==='all')||(currentCatFilter===c)?' on':''}"
+      onclick="setCat('${c==='all'?'':c}')">${c==='all'?'All':c}</button>`
+  ).join('');
+  document.getElementById('catBtns').innerHTML = btns;
 }
+function setCat(c){ currentCatFilter=c; renderCatFilter(currentBrand); renderDevApps(); }
 
-// ============================================================
-// DEVICE DETECTION
-// ============================================================
-let currentDevice = 'all';
+// ════════════════ RENDER DEVICE APPS ════════════════
+function renderDevApps(){
+  if(!currentBrand) return;
+  const b = BRANDS[currentBrand];
+  const q = (document.getElementById('devSearch')||{value:''}).value.toLowerCase();
+  const defs = loadDefs();
+  const container = document.getElementById('devAppSections');
+  container.innerHTML = '';
 
-function detectDevice() {
-    const ua = navigator.userAgent;
-    if (/SM-|Samsung/i.test(ua)) return 'samsung';
-    if (/Pixel|Nexus/i.test(ua)) return 'google';
-    if (/OnePlus|ONEPLUS/i.test(ua)) return 'oneplus';
-    if (/xiaomi|MI |Redmi|POCO/i.test(ua)) return 'xiaomi';
-    if (/OPPO|CPH[0-9]/i.test(ua)) return 'oppo';
-    if (/vivo/i.test(ua)) return 'vivo';
-    if (/Motorola|MOTO|XT[0-9]/i.test(ua)) return 'motorola';
-    if (/ASUS/i.test(ua)) return 'asus';
-    return 'all';
-}
+  const filter = a => {
+    const ms = a.name.toLowerCase().includes(q) || a.pkg.toLowerCase().includes(q);
+    const mc = !currentCatFilter || a.cat === currentCatFilter;
+    return ms && mc;
+  };
 
-// ============================================================
-// QUICK LAUNCH SECTION — user's selected defaults
-// ============================================================
-function renderQuickSection() {
-    const container = document.getElementById('quickSection');
-    const defaults = loadDefaults();
-    const setCount = Object.keys(defaults).length;
+  const groups = [
+    {key:'native',  label:`${b.name.split('/')[0].trim()} Native Apps`,   priority:'native',  apps: (b.native||[]).filter(filter)},
+    {key:'popular', label:'Popular Apps — Works On This Device',           priority:'popular', apps: (b.popular||[]).filter(filter)},
+    {key:'third',   label:'All Popular 3rd-Party Apps',                    priority:'third',   apps: UNIVERSAL_POPULAR.filter(a=>
+      !(b.native||[]).find(n=>n.pkg===a.pkg) &&
+      !(b.popular||[]).find(p=>p.pkg===a.pkg) &&
+      filter(a)
+    )},
+  ];
 
-    document.getElementById('defaultsSet').textContent = setCount;
+  let any = false;
+  groups.forEach((g,gi) => {
+    if(!g.apps.length) return;
+    any = true;
+    // dedupe within group against previous groups
+    const shownPkgs = groups.slice(0,gi).flatMap(prev=>prev.apps.map(a=>a.pkg));
+    const apps = g.apps.filter(a=>!shownPkgs.includes(a.pkg));
+    if(!apps.length) return;
 
-    const cards = DEFAULT_CATS.map(dc => {
-        const app = getDefaultApp(dc.cat);
-        const url = app ? intentUrl(app) : '#';
-        const openPart = app
-            ? `<a class="quick-open" href="${url}" target="_blank" rel="noopener">
-                    <span class="q-ico">${app.icon}</span>
-                    <span class="q-name">${app.name}</span>
-                    <span class="q-arr">→</span>
-               </a>`
-            : `<div class="not-set">// not set</div>`;
+    // sort defaults first
+    apps.sort((a,b2) => (defs[b2.cat]===b2.pkg?1:0) - (defs[a.cat]===a.pkg?1:0));
 
-        return `<div class="quick-card">
-            <span class="quick-cat-label">${dc.icon} ${dc.label}</span>
-            ${openPart}
-            <button class="change-btn" onclick="openCatModal('${dc.cat}','${dc.label}','${dc.hint}')">
-                ${app ? '⇄ CHANGE' : '+ SET DEFAULT'}
-            </button>
-        </div>`;
+    const items = apps.map(a=>{
+      const isDefault = defs[a.cat]===a.pkg;
+      return `<li class="app-li${isDefault?' is-default':''}">
+        <a class="app-link" href="${intentUrl(a)}" target="_blank" rel="noopener">
+          <span class="al-open">Open</span>
+          <span class="al-ico">${a.icon}</span>
+          <strong class="al-name">${a.name}${a.note?` <span style="font-size:9px;color:var(--dim);font-weight:400">(${a.note})</span>`:''}</strong>
+          <span class="al-pkg">${a.pkg}</span>
+          <span class="al-cat">${a.cat}</span>
+          ${isDefault?`<span class="al-def-badge">★ DEFAULT</span>`:''}
+          <button class="btn-setdef${isDefault?' on':''}"
+            onclick="event.preventDefault();event.stopPropagation();doToggleDef('${a.cat}','${a.pkg}','${a.name.replace(/'/g,"\\'")}')">
+            ${isDefault?'★ SET':'☆ SET'}
+          </button>
+          <button class="btn-cp" onclick="event.preventDefault();event.stopPropagation();doCopy('${a.pkg}')">📋</button>
+          <span class="al-arr">→</span>
+        </a>
+      </li>`;
     }).join('');
 
-    container.innerHTML = `
-        <div class="quick-section">
-            <div class="quick-header">
-                <div>
-                    <div class="quick-title">⚡ YOUR DEFAULT APPS — QUICK LAUNCH</div>
-                    <div class="quick-hint">// click any card to open your chosen app directly — tap "CHANGE" to pick a different one</div>
-                </div>
-                <span class="quick-hint">${setCount}/${DEFAULT_CATS.length} SET</span>
-            </div>
-            <div class="quick-grid">${cards}</div>
-        </div>`;
+    const sec = document.createElement('div');
+    sec.className = 'app-group';
+    sec.style.animationDelay = `${gi*0.05}s`;
+    sec.innerHTML = `
+      <div class="ag-head">
+        <span class="ag-priority ${g.priority}">${g.priority.toUpperCase()}</span>
+        <span class="ag-title">${g.label}</span>
+        <span class="ag-count">${apps.length}</span>
+      </div>
+      <ul class="app-list">${items}</ul>`;
+    container.appendChild(sec);
+  });
+
+  if(!any){
+    container.innerHTML = `<div class="empty"><div class="empty-ico">🔍</div>// NO APPS FOUND — TRY DIFFERENT SEARCH</div>`;
+  }
 }
 
-// ============================================================
-// TABS
-// ============================================================
-function renderTabs() {
-    const el = document.getElementById('deviceTabs');
-    const tabs = [{key:'all', name:'All', emoji:'📱'}];
-    Object.entries(DB).forEach(([k,b]) => tabs.push({key:k, name:b.name, emoji:b.emoji}));
-    el.innerHTML = tabs.map(t =>
-        `<button class="dtab${currentDevice===t.key?' active':''}" onclick="setDevice('${t.key}')">${t.emoji} ${t.name}</button>`
-    ).join('');
+// ════════════════ DEFAULT TOGGLE ════════════════
+function doToggleDef(cat, pkg, name){
+  const set = toggleDef(cat, pkg);
+  renderQuickChips(currentBrand);
+  renderDevApps();
+  showToast(set ? `★ DEFAULT: ${name}` : `// CLEARED: ${name}`, set?'y':'g');
 }
 
-function setDevice(d) { currentDevice = d; renderTabs(); renderApps(); }
+// ════════════════ MODAL — pick default for category ════════════════
+let modalCat='', modalBrand='';
 
-// ============================================================
-// RENDER ALL APPS
-// ============================================================
-function renderApps() {
-    const container = document.getElementById('appSections');
-    container.innerHTML = '';
-    const q = document.getElementById('searchInput').value.toLowerCase();
-    const cat = document.getElementById('categoryFilter').value;
-    const defaults = loadDefaults();
-    let total = 0;
+function openCatModal(cat, label, brandKey){
+  modalCat=cat; modalBrand=brandKey;
+  document.getElementById('modalTtl').textContent = `SET DEFAULT: ${label.toUpperCase()}`;
+  document.getElementById('modalSub').textContent = `// choose your preferred ${label.toLowerCase()} app for quick launch`;
+  document.getElementById('modalSrch').value='';
+  document.getElementById('modalBg').classList.add('open');
+  renderModalItems();
+}
+function openDefaultsModal(){
+  const dc = DEF_CATS[0];
+  openCatModal(dc.cat, dc.label, currentBrand||Object.keys(BRANDS)[0]);
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('open'); }
 
-    Object.entries(DB).forEach(([key, brand]) => {
-        const apps = brand.apps.filter(a => {
-            const ms = a.name.toLowerCase().includes(q) || a.pkg.toLowerCase().includes(q);
-            const mc = !cat || a.cat === cat;
-            const md = currentDevice === 'all' || a.dev.includes(currentDevice) || a.dev.includes('all');
-            return ms && mc && md;
-        });
-        if (!apps.length) return;
-        total += apps.length;
+function renderModalItems(){
+  const q = document.getElementById('modalSrch').value.toLowerCase();
+  const defs = loadDefs();
+  const curPkg = defs[modalCat]||'';
+  const container = document.getElementById('modalItems');
 
-        // Sort: defaults first
-        apps.sort((a, b) => {
-            const aIsDefault = Object.values(defaults).includes(a.pkg);
-            const bIsDefault = Object.values(defaults).includes(b.pkg);
-            return bIsDefault - aIsDefault;
-        });
+  let pool = modalBrand ? allApps(modalBrand) : UNIVERSAL_POPULAR;
+  let apps = pool.filter(a=>{
+    const matchCat = a.cat===modalCat;
+    const matchQ = !q || a.name.toLowerCase().includes(q) || a.pkg.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  // if searching and few results, include other cats
+  if(q && apps.length<4){
+    const extra = pool.filter(a=>a.cat!==modalCat&&(a.name.toLowerCase().includes(q)||a.pkg.toLowerCase().includes(q)));
+    apps = [...apps,...extra].slice(0,20);
+  }
+  apps.sort((a,b2)=>(b2.pkg===curPkg?1:0)-(a.pkg===curPkg?1:0));
 
-        const items = apps.map(a => {
-            const isDefault = Object.values(defaults).includes(a.pkg);
-            const isCatDefault = defaults[a.cat] === a.pkg;
-            const href = intentUrl(a);
-            return `<li class="${isDefault ? 'is-default' : ''}">
-                <a class="app-link" href="${href}" target="_blank" rel="noopener">
-                    <span class="lbl-open">Open</span>
-                    <span class="app-ico">${a.icon}</span>
-                    <strong class="app-nm">${a.name}</strong>
-                    <span class="app-pkg">${a.pkg}</span>
-                    <span class="app-cat">${a.cat}</span>
-                    ${isCatDefault ? `<span class="default-badge">★ DEFAULT</span>` : ''}
-                    <button class="btn-set-default ${isCatDefault ? 'is-set' : ''}"
-                        onclick="event.preventDefault();event.stopPropagation();quickSetDefault('${a.cat}','${a.pkg}','${a.name}')">
-                        ${isCatDefault ? '★ DEFAULT' : '☆ SET DEFAULT'}
-                    </button>
-                    <button class="btn-copy" onclick="event.preventDefault();event.stopPropagation();doCopy('${a.pkg}')">📋</button>
-                    <span class="arr">→</span>
-                </a>
-            </li>`;
-        }).join('');
-
-        const sec = document.createElement('div');
-        sec.className = 'brand-section';
-        sec.innerHTML = `
-            <div class="brand-heading">
-                <span class="brand-emoji">${brand.emoji}</span>
-                <span class="brand-name">${brand.name}</span>
-                <span class="brand-count">${apps.length} APPS</span>
-            </div>
-            <ul class="app-list">${items}</ul>`;
-        container.appendChild(sec);
-    });
-
-    if (!total) {
-        container.innerHTML = `<div class="empty-state"><div class="ico">🔍</div><p>// NO APPS FOUND</p></div>`;
-    }
+  if(!apps.length){
+    container.innerHTML=`<div class="m-empty">// No apps found for "${q}"</div>`;return;
+  }
+  container.innerHTML = apps.map(a=>`
+    <div class="m-item${a.pkg===curPkg?' sel':''}" onclick="selectModalDefault('${a.pkg}')">
+      <span class="m-ico">${a.icon}</span>
+      <div class="m-info">
+        <div class="m-name">${a.name}</div>
+        <div class="m-pkg">${a.pkg}</div>
+        <div class="m-brand">${a.group==='native'?'// native system app':a.group==='popular'?'// popular on this device':'// universal 3rd-party'}</div>
+      </div>
+      ${a.pkg===curPkg?'<span class="m-check">★</span>':''}
+    </div>`).join('');
 }
 
-// ============================================================
-// MODAL — pick default for a category
-// ============================================================
-let currentModalCat = '';
-
-function openCatModal(cat, label, hint) {
-    currentModalCat = cat;
-    document.getElementById('modalTitle').textContent = `SET DEFAULT: ${label.toUpperCase()}`;
-    document.getElementById('modalSubtitle').textContent = hint;
-    document.getElementById('modalSearch').value = '';
-    document.getElementById('modalOverlay').classList.add('open');
-    renderModalList();
+function selectModalDefault(pkg){
+  if(!modalCat) return;
+  saveDef(modalCat, pkg);
+  const app = allApps(modalBrand).find(a=>a.pkg===pkg)||UNIVERSAL_POPULAR.find(a=>a.pkg===pkg);
+  closeModal();
+  if(currentBrand){ renderQuickChips(currentBrand); renderDevApps(); }
+  showToast(`★ DEFAULT SET: ${app?app.name:pkg}`, 'y');
 }
 
-function openDefaultsModal() {
-    // Open modal for first unset category, or phone
-    const defaults = loadDefaults();
-    const unset = DEFAULT_CATS.find(dc => !defaults[dc.cat]);
-    const dc = unset || DEFAULT_CATS[0];
-    openCatModal(dc.cat, dc.label, dc.hint);
+// ════════════════ HOME PAGE ════════════════
+function renderHome(){
+  const grid = document.getElementById('brandGrid');
+  grid.innerHTML = Object.entries(BRANDS).map(([k,b])=>`
+    <div class="brand-tile" onclick="loadDevicePage('${k}')">
+      <div class="bt-ico">${b.emoji}</div>
+      <div class="bt-name">${b.name.split('/')[0].trim()}</div>
+      <div class="bt-os">${b.os}</div>
+      <div class="bt-count">${(b.native||[]).length} native apps</div>
+    </div>`).join('');
 }
 
-function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    currentModalCat = '';
+// ════════════════ TOAST ════════════════
+function showToast(msg,type='g'){
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2800);
 }
 
-function renderModalList() {
-    const q = document.getElementById('modalSearch').value.toLowerCase();
-    const container = document.getElementById('modalList');
-    const defaults = loadDefaults();
-    const currentPkg = defaults[currentModalCat] || '';
+// ════════════════ COPY ════════════════
+function doCopy(pkg){ navigator.clipboard.writeText(pkg).then(()=>showToast('// COPIED: '+pkg,'g')); }
 
-    // Get all apps matching category, optionally filtered by search
-    let apps = ALL_APPS.filter(a => {
-        const matchCat = a.cat === currentModalCat;
-        const matchSearch = !q || a.name.toLowerCase().includes(q) || a.pkg.toLowerCase().includes(q) || a.brandName.toLowerCase().includes(q);
-        return matchCat && matchSearch;
-    });
+// ════════════════ INIT ════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  renderHome();
 
-    // If searching, also show apps from other categories matching the search
-    if (q && apps.length < 5) {
-        const extra = ALL_APPS.filter(a => a.cat !== currentModalCat && (
-            a.name.toLowerCase().includes(q) || a.pkg.toLowerCase().includes(q)
-        )).slice(0, 10);
-        apps = [...apps, ...extra];
-    }
+  const detected = detectBrand();
+  const ua = navigator.userAgent;
 
-    if (!apps.length) {
-        container.innerHTML = `<div class="modal-none">// No apps found for "${q}"<br>Try a different search term</div>`;
-        return;
-    }
+  if(detected){
+    const b = BRANDS[detected];
+    document.getElementById('detLogo').textContent = b.emoji;
+    document.getElementById('detName').textContent = b.name.split('/')[0].trim().toUpperCase();
+    document.getElementById('detOS').textContent = '// ' + b.os;
+    document.getElementById('hStrip').textContent = `${b.emoji} ${b.name.split('/')[0].trim().toUpperCase()} DETECTED`;
+    document.getElementById('hBadge').textContent = b.name.split('/')[0].trim().toUpperCase();
+    currentBrand = detected;
+    // Auto-redirect to device page
+    setTimeout(()=>loadDevicePage(detected), 600);
+  } else {
+    document.getElementById('detLogo').textContent = '📱';
+    document.getElementById('detName').textContent = 'UNKNOWN DEVICE';
+    document.getElementById('detOS').textContent = '// select your brand below';
+    document.getElementById('hStrip').textContent = '📱 ANDROID DEVICE';
+    document.getElementById('hBadge').textContent = 'SELECT BRAND';
+    document.getElementById('btnGo').style.display='none';
+  }
 
-    // Sort: current default first
-    apps.sort((a, b) => (b.pkg === currentPkg) - (a.pkg === currentPkg));
-
-    container.innerHTML = apps.map(a => `
-        <div class="modal-item ${a.pkg === currentPkg ? 'selected' : ''}" onclick="selectDefault('${a.pkg}')">
-            <span class="modal-item-ico">${a.icon}</span>
-            <div class="modal-item-info">
-                <div class="modal-item-name">${a.name}</div>
-                <div class="modal-item-pkg">${a.pkg}</div>
-                <div class="modal-item-brand">${a.brandEmoji} ${a.brandName}</div>
-            </div>
-            ${a.pkg === currentPkg ? '<span class="modal-item-check">★</span>' : ''}
-        </div>
-    `).join('');
-}
-
-function selectDefault(pkg) {
-    if (!currentModalCat) return;
-    saveDefault(currentModalCat, pkg);
-    const app = ALL_APPS.find(a => a.pkg === pkg);
-    closeModal();
-    renderQuickSection();
-    renderApps();
-    showToast(`★ DEFAULT SET: ${app ? app.name : pkg}`, 'yellow');
-}
-
-// Quick set default from app list (without opening modal)
-function quickSetDefault(cat, pkg, name) {
-    const defaults = loadDefaults();
-    if (defaults[cat] === pkg) {
-        // Already default — unset it
-        delete defaults[cat];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-        showToast(`// REMOVED DEFAULT: ${name}`, 'green');
-    } else {
-        saveDefault(cat, pkg);
-        showToast(`★ DEFAULT SET: ${name}`, 'yellow');
-    }
-    renderQuickSection();
-    renderApps();
-}
-
-// ============================================================
-// STATS
-// ============================================================
-function updateStats() {
-    let t = 0;
-    Object.values(DB).forEach(b => t += b.apps.length);
-    document.getElementById('totalApps').textContent = t;
-    document.getElementById('totalBrands').textContent = Object.keys(DB).length;
-}
-
-// ============================================================
-// COPY
-// ============================================================
-function doCopy(pkg) {
-    navigator.clipboard.writeText(pkg).then(() => showToast('// COPIED: ' + pkg, 'green'));
-}
-
-// ============================================================
-// TOAST
-// ============================================================
-function showToast(msg, type = 'green') {
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 2800);
-}
-
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-    currentDevice = detectDevice();
-    const d = currentDevice !== 'all' ? DB[currentDevice] : null;
-    document.getElementById('deviceLabel').textContent = d ? `${d.emoji} ${d.name.toUpperCase()} DETECTED` : '📱 ANDROID DEVICE';
-    document.getElementById('deviceBadge').textContent = d ? d.name.toUpperCase() : 'ALL DEVICES';
-
-    renderQuickSection();
-    renderTabs();
-    renderApps();
-    updateStats();
-
-    document.getElementById('searchInput').addEventListener('input', renderApps);
-    document.getElementById('categoryFilter').addEventListener('change', renderApps);
+  document.getElementById('devSearch').addEventListener('input', renderDevApps);
 });
 </script>
 </body>
